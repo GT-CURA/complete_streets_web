@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How Complete are Your City’s Streets?</title>
+
+  <!-- MapBox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="fs/0_side_menu.js" defer></script>
+  <script src="fs/3_map.js" defer></script>
+  <script src="fs/4_data_collection.js" defer></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/2_research_objective.css">
+  <link rel="stylesheet" href="css/3_map.css">
+  <link rel="stylesheet" href="css/4_data_collection.css">
+  <link rel="stylesheet" href="css/0_side_menu.css">
+</head>
+
+
+<body>
+  <!-- Side Menu: jump to the first section of each group -->
+  <nav class="nav">
+    <a data-key="overview"    href="#overview">Overview</a>
+    <a data-key="method"      href="#s4">Methodology</a>
+    <a data-key="about"       href="#about">About</a>
+  </nav>
+
+  <main>
+    <!-- (1–3) Overview -->
+    <!-- (1) Cover -->
+    <section id="overview" class="cover">
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="assets/1_cover.mp4" type="video/mp4">
+      </video>
+      <div class="content">
+        <h1>
+          How Complete are Your City’s Streets?
+        </h1>
+        <h2>Evaluating the Completeness of Urban Streets Using AI and Big Data</h2>
+      </div>
+      <div class="hint">scroll down or press ↓ to continue</div>
+    </section>
+
+
+
+    <!-- (2) Research Objective -->
+    <section id="methodology">
+      <div class="sec-title"><h2>Research Objective</h2></div>
+
+      <div class="framework">
+        <!-- Text Box -->
+        <div class="rf-heading">
+          <div class="rf-text">
+            <span class="highlight">Complete streets</span> is a transportation policy that creates safe, accessible streets for all users—whether they walk, bike, drive, or use public transit. While this approach has gained widespread support from researchers and city planners, a critical challenge remains: how to efficiently collect data and measure street performance at scale.
+
+            This project addresses these challenges through two main objectives: (1) developing and implementing an automated method for collecting data on eight key complete streets elements, and (2) creating a numeric rating index that evaluates how complete a street is based on the collected data.
+          </div>
+        </div>
+
+        <!-- Components -->
+        <div class="rf-row">
+          <!-- Video (left) -->
+          <div class="rf-img">
+            <video id="rf-video" class="rf-video" muted playsinline preload="auto" poster="assets/4_street_map.jpg">
+              <source src="assets/2_research_objective.mp4" type="video/mp4">
+            </video>
+          </div>
+
+          <!-- Table (center) -->
+          <div class="rf-table">
+            <div class="diagram-box" id="rf-diagram">
+              <div class="row"><div class="label">Sidewalk</div>       <div class="typing" data-text="Yes, both sides, width: 8 ft"></div></div>
+              <div class="row"><div class="label">Bike lane</div>      <div class="typing" data-text="Yes, protected"></div></div>
+              <div class="row"><div class="label">Amenities</div>      <div class="typing" data-text="Yes, high accessibility"></div></div>
+              <div class="row"><div class="label">Transit stop</div>   <div class="typing" data-text="Yes, with shelter"></div></div>
+              <div class="row"><div class="label">Median</div>         <div class="typing" data-text="No, -"></div></div>
+              <div class="row"><div class="label">Vehicular road</div> <div class="typing" data-text="Yes, 3 lanes"></div></div>
+              <div class="row"><div class="label">Street buffer</div>  <div class="typing" data-text="Yes, one side, width: 2 ft"></div></div>
+              <div class="row"><div class="label">Street parking</div> <div class="typing" data-text="Yes, both sides"></div></div>
+            </div>
+          </div>
+
+          <!-- Vertical Progress Bar (between table and slot) -->
+          <div class="rf-progress">
+            <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="fill"></span>
+            </div>
+          </div>
+
+          <!-- Slot machine (right) -->
+          <div class="rf-slot">
+            <div class="score-box">
+              <h3 class="score-heading">Completeness score</h3>
+              <div class="odometer" id="odo">
+                <div class="wheel"><div class="digit" data-target="0"></div></div>
+                <div class="wheel"><div class="digit" data-target="0"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- (3) Map -->
+    <section id="mapbox">
+      <div class="sec-title"><h2>Map of Complete Score in Atlanta</h2></div>
+      <div id="atl-map"></div>
+
+      <div id="map-controls">
+        <button data-layer="composite" class="active">Composite score</button>
+        <button data-layer="sidewalk">Sidewalk</button>
+        <button data-layer="bike">Bike lane</button>
+        <button data-layer="poi">Amenities</button>
+        <button data-layer="transit">Transit stop</button>
+        <button data-layer="median">Median</button>
+        <button data-layer="vehicle">Vehicular road</button>
+        <button data-layer="streetbuffer">Street buffer</button>
+        <button data-layer="parking">Street parking</button>        
+      </div>
+
+      <div id="map-legend"></div>
+    </section>
+
+
+
+    <!--------------------------------------------------------------------------------------->
+    <!-- (4–6) Data & Methodology -->
+    <!-- (4) Data collection -->
+    <section id="s4" class="data-collection" aria-labelledby="dc-title">
+      <div class="sec-title"><h2 id="dc-title">Data collection</h2></div>
+      
+      <!-- Text Box -->  
+      <div class="rf-heading">
+        <div class="rf-text reveal" id="dc-text">
+          <span class="highlight">Data collection</span> aggregates eight Complete Street elements from street view imagery and open data sources. Median, vehicular road, and amenities data are derived from open data, while the remaining elements utilize Google Street View imagery processed through computer vision algorithms.
+        </div>
+      </div>
+
+      <!-- Components -->
+      <figure class="dc-figure reveal">
+        <div class="dc-flex">
+
+          <!-- Image + Overlay (left) -->
+          <div class="dc-image-wrap">
+            <img id="dc-image" src="assets/4_street_map.jpg" data-base-src="assets/4_street_map.jpg" alt="">
+            <img id="dc-image-next" alt="">
+            <svg id="dc-overlay"></svg>
+          </div>
+
+          <!-- Dynamic Side Panel (right) -->
+          <aside class="dc-sidepanel is-empty" id="dc-panel" aria-live="polite">
+            <div class="panel-header">
+              <h3 id="panel-title"></h3>
+            </div>
+
+            <div class="accordion" id="dc-accordion">
+              <div class="acc-item">
+                <button class="acc-btn" data-k="data">Data requirement</button>
+                <div class="acc-panel" data-k="data"></div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-btn" data-k="how">How it works</button>
+                <div class="acc-panel" data-k="how"></div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-btn" data-k="output">Output</button>
+                <div class="acc-panel" data-k="output"></div>
+              </div>
+            </div>
+
+            <a id="panel-link" class="panel-cta disabled" href="#" target="_blank" rel="noopener">Find out more details →</a>
+          
+          </aside>
+        </div>
+      </figure>
+
+    </section>
+
+
+
+    <!-- (5) How to assign weights? -->
+    <section id="s5"><h2>Section 5</h2></section>
+
+
+
+    <!-- (6) How to evluate the score of each element -->
+    <section id="s6"><h2>Section 6</h2></section>
+
+
+
+    <!-- (7) About: Who we are? -->
+    <section id="about"><h2>About</h2><p>Team members. Publications.</p></section>
+  </main>
+
+  <script src="fs/2_research_objective.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+/* ---- Tunables (shared) ---- */
+:root{
+  --page-gutter: 40px;
+  --container-max: 1600px;
+  --gap: 5px;
+
+  /* Image & panel sizing */
+  --image-min: 480px;
+  --panel-w: clamp(340px, 26vw, 520px);
+
+  --figure-max-h: clamp(720px, 65vh, 1000px);
+}
+
+/* Section shell */
+#s4.data-collection{
+  padding: 80px var(--page-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+/* Keep the section title consistent with other pages */
+#s4 .sec-title{
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  text-align: left;
+}
+
+/* ---- Match Section 2 container widths ---- */
+#s4 .rf-heading,
+#s4 .dc-figure{
+  width: 90vw;                       /* same as Section 2 .framework */
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+/* ---- Match Section 2 .rf-text styling ---- */
+#s4 .rf-heading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+  margin-bottom: clamp(20px, 4vh, 16px);
+}
+
+#s4 .rf-text{
+  max-width: min(160ch, 100%);
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.8;
+  text-align: left;
+  white-space: pre-line;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Figure row uses grid already — keep it */
+.dc-flex{
+  display: grid;
+  grid-template-columns: minmax(var(--image-min), 1fr) var(--panel-w);
+  gap: var(--gap);
+  align-items: start;
+  justify-content: center;
+  /* NEW: make the row height be driven by the image wrapper */
+  grid-auto-rows: 1fr;
+}
+
+/* Left column */
+.dc-image-wrap{
+  position: relative;
+  width: 100%;
+  
+  max-height: var(--figure-max-h);
+  aspect-ratio: 16 / 9;              /* keeps it proportional as it shrinks */
+}
+
+/* Make the bitmap fill the wrapper cleanly */
+#dc-image{
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;                      /* was auto */
+  object-fit: cover;                 /* avoid distortion when capped */
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Overlay stays pinned */
+#dc-overlay{
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;   /* <-- enable interaction */
+}
+
+/* Right column: side panel */
+.dc-sidepanel{
+  width: var(--panel-w);
+  max-width: 100%;
+  height: 100%;                      /* NEW: match the grid track height */
+  border: none;
+  background: none;
+  color: #eaeaea;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  padding: 10px;
+  overflow: auto;
+}
+
+.dc-sidepanel .accordion,
+.dc-sidepanel .acc-item,
+.dc-sidepanel .acc-btn,
+.dc-sidepanel .acc-content,
+.dc-sidepanel ul,
+.dc-sidepanel li {
+  text-align: left;
+}
+
+/* Marker styling */
+.marker{ cursor: default; pointer-events: all; }
+.marker circle{ stroke: #333; stroke-width: 1.5; }
+.marker:hover circle{ stroke-width: 2; }
+.marker text{
+  font: 600 14px/1.3 system-ui, sans-serif;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 2px;
+  fill: #111;
+}
+
+/* Header (pill removed by default) */
+.panel-header{ display: grid; gap: 6px; margin-bottom: 10px; }
+
+/* hard disable any pill if still in DOM */
+.panel-header .pill{ display: none !important; }
+
+.panel-header h3{
+  font: 700 18px/1.25 system-ui, sans-serif;
+  margin: 0;
+}
+
+/* Empty state */
+.dc-sidepanel.is-empty .accordion,
+.dc-sidepanel.is-empty .panel-cta{
+  opacity: 0.5;
+}
+
+.dc-sidepanel.is-empty h3{
+  position: relative;
+  min-height: 1.2em;
+}
+
+.dc-sidepanel.is-empty h3::before{
+  content: "Click an element to explore details";
+  display: block;
+  font: 600 14px/1.3 system-ui, sans-serif;
+  color: #a7a7a7;
+}
+
+/* Accordion */
+.accordion{ display: grid; gap: 8px; }
+.acc-item{
+  border: 1px solid #2b2b2b;
+  border-radius: 10px;
+  background: #141416;
+  overflow: hidden;
+}
+.acc-btn{
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #eaeaea;
+  padding: 12px 14px;
+  font: 600 14px/1.2 system-ui, sans-serif;
+  border: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.acc-btn::after{
+  content: '▸';
+  transition: transform .2s ease;
+  opacity: 0.8;
+}
+.acc-item.open .acc-btn::after{ transform: rotate(90deg); }
+
+.acc-panel{
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 14px;
+  color: #cfcfcf;
+  font: 400 13px/1.6 system-ui, sans-serif;
+  transition: max-height .25s ease;
+}
+.acc-item.open .acc-panel{ padding: 10px 14px 14px; }
+
+/* CTA link */
+.panel-cta{
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #1d1f24;
+  border: 1px solid #2b2b2b;
+  color: #cfe3ff;
+  text-decoration: none;
+  font: 600 13px/1 system-ui, sans-serif;
+}
+.panel-cta:hover{ background: #22252b; }
+.panel-cta.disabled{
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* ---- Mobile stacking ---- */
+@media (max-width: 1000px){
+  /* Narrower container */
+  #s4 .rf-heading,
+  #s4 .dc-figure{
+    width: 92vw;
+    max-width: 680px;
+  }
+
+  .dc-flex{
+    display: grid;
+    grid-template-columns: 1fr;      /* stack */
+    gap: 12px;
+  }
+
+  .dc-image-wrap,
+  .dc-sidepanel{
+    width: 100%;
+    max-width: 100%;
+    height: auto !important;         /* override any JS height sync */
+  }
+}
+
+.dc-sidepanel ul {
+  list-style-position: inside; /* bullets stay inside the panel box */
+  margin: 0;
+  padding-left: 1.2em;         /* space so bullets don’t overlap text */
+  text-align: left;            /* align text itself */
+}
+.dc-sidepanel li {
+  margin: 4px 0;
+}
+
+.dc-sidepanel {
+  font-family: 'Space Grotesk', sans-serif; /* same as cover page */
+  font-size: 0.95rem;   /* adjust smaller/larger to taste */
+  line-height: 1.4;     /* good readability */
+}
+.dc-sidepanel h3, 
+.dc-sidepanel h4 {
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+#dc-overlay .marker {
+  cursor: pointer;   /* shows a hand when hovering */
+}
+
+#dc-overlay .marker text{ transition:opacity .15s ease; }
+#dc-overlay .marker.dim text{ opacity:.35; }
+
+
+/* ONE shared frame for both images */
+.dc-image-wrap{
+  position: relative;
+  overflow: hidden;               /* clip rounded corners for imgs + svg */
+  border: 2px solid #ccc;         /* moved here */
+  border-radius: 12px;            /* moved here */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);  /* moved here */
+  background: #fff;               /* if you want a white base under fades */
+}
+
+/* Both images have identical sizing, no own borders */
+#dc-image,
+#dc-image-next{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;              /* or 'contain' — just make them match */
+  border: 0;                      /* remove border from imgs */
+  border-radius: 0;               /* wrapper handles rounding */
+  transform: translateZ(0);       /* reduce subpixel shimmer on fade */
+}
+
+/* Transitional (top) image stays stacked above the base */
+#dc-image-next{
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .45s ease;
+  pointer-events: none;
+}
+
+/* Keep the SVG interactive and clipped by wrapper corners */
+#dc-overlay{
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+  z-index: 1;
+}

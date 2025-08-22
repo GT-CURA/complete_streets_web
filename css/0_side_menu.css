@@ -1,0 +1,52 @@
+/* --- COLORS: Overview / Methodology / About --- */
+:root{
+  --col-overview: #ccd5ae;
+  --col-method:   #e9edc9;
+  --col-about:    #faedcd;
+}
+
+/* Smooth anchor scrolling */
+html { scroll-behavior: smooth; }
+
+.nav{
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.nav a{
+  --nav-pill-w: 130px;
+  width: var(--nav-pill-w);
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap; 
+  padding: 8px 14px;   
+  box-sizing: border-box; 
+}
+.nav a:hover{
+  background: rgba(255,255,255,0.12);
+}
+.nav a.active{
+  border-color: var(--acc);
+  color: var(--acc);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--acc) 35%, transparent),
+    0 6px 18px rgba(0,0,0,.25);
+  background: color-mix(in srgb, var(--acc) 18%, transparent);
+}
+
+/* Which link gets which color */
+.nav.overview-active a[data-key="overview"]   { --acc: var(--col-overview); }
+.nav.method-active   a[data-key="method"]     { --acc: var(--col-method); }
+.nav.about-active    a[data-key="about"]      { --acc: var(--col-about); }
+
+/* ------------------------ Small screens ------------------------ */
+@media (max-width: 520px){
+  .nav{
+    flex-direction: column;
+    align-items: flex-end;   /* keeps it near the right edge */
+  }
+  .nav a{ width: 100%; }     /* full width pills when stacked */
+}
