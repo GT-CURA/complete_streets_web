@@ -69,12 +69,12 @@ const TRANSIT_THRESH = [0, 5, 10, 20, 30, 40];
 const TRANSIT_STOPS  = makeStops(TRANSIT_THRESH);
 const transitColor   = rampExpr(TRANSIT_PROP, TRANSIT_STOPS);
 
-// Sidewalk (ft)
-const SIDEWALK_THRESH = [0, 2, 4, 6, 8, 12];
+// Sidewalk (meter)
+const SIDEWALK_THRESH = [0, 1, 2, 4, 6, 12];
 const SIDEWALK_STOPS  = makeStops(SIDEWALK_THRESH);
-const sidewalkColor   = rampExpr('sidewalk_width', SIDEWALK_STOPS);
+const sidewalkColor   = rampExpr('width', SIDEWALK_STOPS);
 
-// Street buffer (ft)
+// Street buffer (meter)
 const STREETBUFFER_THRESH = [0, 0.5, 1, 2, 3, 6];
 const STREETBUFFER_STOPS  = makeStops(STREETBUFFER_THRESH);
 const streetbufferColor   = rampExpr('streetbuffer_width', STREETBUFFER_STOPS);
@@ -118,8 +118,8 @@ const HOVER_FIELD = {
   parking:     { label:'Parking availability',     prop:'predicted_avail',         fmt:v => (Number(v)===1?'Yes (1)':'No (0)') },
   median:     { label:'Median presence',           prop:'median_value',            fmt: v => (Number(v)===1 ? 'Yes (1)' : 'No (0)')},
   transit:     { label:'Transit stop score',       prop:TRANSIT_PROP,              fmt:v => (+v).toFixed(1) },
-  sidewalk:    { label:'Sidewalk width (ft)',      prop:'sidewalk_width',          fmt:v => `${(+v).toFixed(1)} ft` },
-  streetbuffer:{ label:'Street buffer width (ft)', prop:'streetbuffer_width',      fmt:v => `${(+v).toFixed(1)} ft` }
+  sidewalk:    { label:'Sidewalk width (meter)',      prop:'width',          fmt:v => `${(+v).toFixed(1)} meter` },
+  streetbuffer:{ label:'Street buffer width (meter)', prop:'streetbuffer_width',      fmt:v => `${(+v).toFixed(1)} meter` }
 };
 
 // ---------- HOVER popup (composite score) ----------
@@ -418,13 +418,13 @@ const LAYER_DEFS = [
     key: 'sidewalk',
     title: 'Sidewalk (sidewalk_width)',
     sourceId: 'sidewalk',
-    sourceUrl: 'mapbox://lsj8687.2uznz6oi',
+    sourceUrl: 'mapbox://lsj8687.dm744rhw',
     layerId: 'sidewalk-line',
     type: 'line',
-    sourceLayer: 'SIDEWALK_20m_top10_v2-78ydon',
+    sourceLayer: 'SIDEWALK_15m_top10_v2-2tw6ic',
     paint: {
       'line-color': [
-        'case', ['==', ['to-number', ['get', 'sidewalk_width']], 0], '#9e9e9e',
+        'case', ['==', ['to-number', ['get', 'width']], 0], '#9e9e9e',
         sidewalkColor
       ],
       'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6],
@@ -433,10 +433,10 @@ const LAYER_DEFS = [
     visibleByDefault: false,
     styleMods: { underScale: 1.8, overScale: 0.6 },
     legend: {
-      kind: 'gradient', title: 'Sidewalk width (ft)',
+      kind: 'gradient', title: 'Sidewalk width (meter)',
       min: SIDEWALK_THRESH[1], max: SIDEWALK_THRESH.at(-1),
       stops: SIDEWALK_STOPS.filter(([v]) => v > 0),
-      tickVals: [2,4,6,8,12], format: v => (v===12?'12+':v.toFixed(0)),
+      tickVals: [1,2,4,6,12], format: v => (v===12?'12+':v.toFixed(0)),
       extraCats: [ {label:'No sidewalk', color:'#9e9e9e'} ]
     }
   },
@@ -481,7 +481,7 @@ const LAYER_DEFS = [
     visibleByDefault: false,
     styleMods: { underScale: 1.8, overScale: 0.6 },
     legend: {
-      kind:'gradient', title:'Street buffer width (ft)',
+      kind:'gradient', title:'Street buffer width (meter)',
       min: STREETBUFFER_THRESH[1], max: STREETBUFFER_THRESH.at(-1),
       stops: STREETBUFFER_STOPS.filter(([v]) => v > 0),
       tickVals: [0.5,1,2,3,6], format:v=> (v===6?'6+':v.toFixed(1)),
