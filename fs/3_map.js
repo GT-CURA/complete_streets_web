@@ -97,7 +97,7 @@ const medianColor = [
 // Bike lane
 const bikeColor = [
   'match', ['to-number', ['get','bike_type']],
-  0, '#9e9e9e', 1, '#00c2ff', 2, '#6ee7b7', // 1 Designated // 2 Protected
+  0, '#9e9e9e', 1, '#00c2ff', 2, '#1b7eda', // 1 Designated // 2 Protected
   '#9e9e9e'
 ];
 
@@ -362,16 +362,18 @@ const LAYER_DEFS = [
     key: 'bike',
     title: 'Bike lane (bike_type)',
     sourceId: 'bike_lane',
-    sourceUrl: 'mapbox://lsj8687.cumhsq4k',
+    // sourceUrl: 'mapbox://lsj8687.cumhsq4k', // V2.0
+    sourceUrl: 'mapbox://lsj8687.bdg4mar5', // V3.0
     layerId: 'bike_lane-line',
     type: 'line',
-    sourceLayer: 'BIKELANE_top10_v2-0c94a0',
+    // sourceLayer: 'BIKELANE_top10_v2-0c94a0', // V2.0
+    sourceLayer: 'BIKELANE_top10_v3-15lpml', //V3.0
     paint: { 'line-color': bikeColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     legend: { kind:'cats', title:'Lane type', width: 180, cats:[
       {label:'Not existed', color:'#9e9e9e'},
       {label:'Designated', color:'#00c2ff'},
-      {label:'Protected',  color:'#6ee7b7'}
+      {label:'Protected',  color:'#1b7eda'}
     ]}
   },
   {
