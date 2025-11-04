@@ -414,7 +414,7 @@ const LAYER_DEFS = [
     sourceUrl: 'mapbox://lsj8687.8r2yxsa7', // V3.0
     layerId: 'bike_lane-line',
     type: 'line',
-    sourceLayer: 'BikeLane_ATTRIBUTE_v3-a6amjd', //V3.0
+    sourceLayer: 'BikeLane_ATTRIBUTE_v3-a6amjd', //V3.0 
     paint: { 'line-color': bikeColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     legend: { kind:'cats', title:'Lane type', width: 180, cats:[

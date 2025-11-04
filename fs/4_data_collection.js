@@ -213,29 +213,73 @@ const COLOR_MAP = {
 
 // ---------- Dynamic side panel content ----------
 const DC_CONTENT = {
+
   "sidewalk": {
     title: "Sidewalk",
     pill:  "Sidewalk",
-    data:  `• Street-level imagery (GSV)`,
-    how:   `Run a CV model on street-view frames to detect sidewalk edges and estimate width.`,
-    output:`Sidewalk presence, side (L/R), estimated width`,
-    link:  "https://doi.org/10.1177/23998083251369602"
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>For one side of the road, two street view images with different pitch angles (0° and −10°)</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Capture two street view images perpendicular to the road direction</li>
+        <li>Apply semantic segmentation and Canny edge detection to extract sidewalk top and bottom edges</li>
+        <li>Use trigonometric functions to calculate sidewalk width</li>
+        <li>For cases where sidewalk edges are not correctly detected via the deep learning model, use a manual annotation tool to complement</li>
+      </ol>
+      <div style="margin-top:8px;">
+        Find out more details on calculating sidewalk width 
+        <a href="https://doi.org/10.1177/23998083251369602" 
+          target="_blank" 
+          style="color:#03A9F4; text-decoration:underline;">
+          here
+        </a>.
+      </div>`,
+    output: `Sidewalk presence and estimated width`,
+    link: "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/sidewalk"
   },
   "bike-lane": {
     title: "Bike lane",
     pill:  "Bike lane",
-    data:  `• Street-view imagery (two views) + satellite tiles<br>• Training labels for designated vs. protected`,
-    how:   `A mid-fusion transformer fuses two GSV views with satellite to classify ‘no lane / designated / protected’.`,
-    output:`Bike lane type`,
-    link:  "https://example.com/bike-lane"
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Two opposite direction street view images and one co-located aerial image</li>
+        <li>Pretrained model for bike lane detection and classification</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Download three co-located images for each road segment point</li>
+        <li>Apply the pretrained model to identify bike lane presence and type</li>
+      </ol>
+      <div style="margin-top:8px;">
+        Find out how we trained the model 
+        <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5599538" 
+          target="_blank" 
+          style="color:#03A9F4; text-decoration:underline;">
+          here
+        </a>.
+      </div>`,
+    output: `Three categories: No bike lane, Designated, or Protected`,
+    link: "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/bike_lane"
   },
   "amenities": {
     title: "Amenities",
     pill:  "Amenities",
-    data:  `• POI datasets Advan`,
-    how:   `Aggregate POIs...`,
-    output:`Accessibility scores`,
-    link:  "https://example.com/amenities"
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>POI datasets, including coordinates, NAICS code, and operating hour information</li>
+        <li>Table showing amenity weights for each type (based on NAICS codes)</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Generate a walkshed around each target road segment</li>
+        <li>Identify POIs within each walkshed that support daily needs</li>
+        <li>Compute amenity weights using three components: popularity (average monthly visits), intensity (average dwell time), and operating hours</li>
+        <li>Derive a composite accessibility score for each road segment, accounting for both amenity density and segment length</li>
+      </ol>`,
+    output: `A composite accessibility score`,
+    link: "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/amenities"
   },
   "transit-stop": {
     title: "Transit stop",
