@@ -55,10 +55,10 @@ function firstTextLabelLayerId() {
 // Composite final_score
 const FINAL_THRESH = [0.00, 0.2, 0.4, 0.6, 0.8, 1.00];
 const FINAL_STOPS  = makeStops(FINAL_THRESH);
-const finalColor   = rampExpr('final_score', FINAL_STOPS);
+const finalColor   = rampExpr('composite_score', FINAL_STOPS);
 
 // POI
-const POI_PROP   = 'poi_access_score_adj_ln';
+const POI_PROP   = 'AMENITIES_attribute';
 const POI_THRESH = [0.0, 1.0, 1.5, 2.0, 2.5, 3.0];
 const POI_STOPS  = makeStops(POI_THRESH);
 const poiColor   = rampExpr(POI_PROP, POI_STOPS);
@@ -96,7 +96,7 @@ const medianColor = [
 
 // Bike lane
 const bikeColor = [
-  'match', ['to-number', ['get','bike_type']],
+  'match', ['to-number', ['get','BIKE_attribute']],
   0, '#9e9e9e', 1, '#00c2ff', 2, '#1b7eda', // 1 Designated // 2 Protected
   '#9e9e9e'
 ];
@@ -111,10 +111,10 @@ const parkingColor = [
 const hoverPopup = new mapboxgl.Popup({ closeButton:false, closeOnClick:false });
 
 const HOVER_FIELD = {
-  composite:   { label:'Composite score',          prop:'final_score',             fmt:v => (+v).toFixed(3) },
+  composite:   { label:'Composite score',          prop:'composite_score',             fmt:v => (+v).toFixed(3) },
   vehicle:     { label:'Number of lanes',          prop:'num_lanes',               fmt:v => String(v) },
-  bike:        { label:'Bike lane type',           prop:'bike_type',               fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
-  poi:         { label:'POI accessibility score',  prop:'poi_access_score_adj_ln', fmt:v => (+v).toFixed(2) },
+  bike:        { label:'Bike lane type',           prop:'BIKE_attribute',               fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
+  poi:         { label:'Amenity accessibility score',  prop:'AMENITIES_attribute', fmt:v => (+v).toFixed(2) },
   parking:     { label:'Parking availability',     prop:'predicted_avail',         fmt:v => (Number(v)===1?'Yes (1)':'No (0)') },
   median:     { label:'Median presence',           prop:'median_value',            fmt: v => (Number(v)===1 ? 'Yes (1)' : 'No (0)')},
   transit:     { label:'Transit stop score',       prop:TRANSIT_PROP,              fmt:v => (+v).toFixed(1) },
@@ -125,57 +125,106 @@ const HOVER_FIELD = {
 // ---------- HOVER popup (composite score) ----------
 // Currently... all normalized to max 0.125
 const SCORE_ITEMS = [
-  { label: 'Bike lane',          prop: 'bike_score' },
-  { label: 'Vehicular lanes',    prop: 'lane_score' },
-  { label: 'Street parking',     prop: 'avail_score' },
-  { label: 'Median',             prop: 'median_type_score' },
-  { label: 'Amenities',          prop: 'poi_score_score' },
-  { label: 'Sidewalk',           prop: 'sidewalk_score' },
-  { label: 'Street buffer',      prop: 'street_buffer_score' },
-  { label: 'Transit stop',       prop: 'transit_score_score' }
+  { label: 'Sidewalk',        prop: 'SIDEWALK_score',        max: 21.9 },
+  { label: 'Street buffer',   prop: 'STREET_BUFFER_score',   max: 18.8 },
+  { label: 'Bike lane',       prop: 'BIKE_score',            max: 16.4 },
+  { label: 'Transit stop',    prop: 'TRANSIT_STOP_score',    max: 12.6 },
+  { label: 'Median',          prop: 'MEDIAN_score',          max: 9.3  },
+  { label: 'POI (amenities)', prop: 'AMENITIES_score',       max: 9.2  },
+  { label: 'Street parking',  prop: 'STREET_PARKING_score',  max: 9.2  },
+  { label: 'Vehicular road',  prop: 'VEHICULAR_score',       max: 2.6  }
 ];
 
-function barColor(val, max = 0.125){
-  const t = Math.max(0, Math.min(1, (val || 0) / max));
+const GLOBAL_FULL_MAX = Math.max(...SCORE_ITEMS.map(s => s.max));
+
+function barColor(val, max){
+  if (!isFinite(val) || !isFinite(max) || max <= 0) {
+    val = 0; max = 1;
+  }
+  const t = Math.max(0, Math.min(1, val / max)); // fraction of full mark
   const hue = 210 - 30 * t;
   const sat = 85;
   const light = 55;
   return `hsl(${hue} ${sat}% ${light}%)`;
 }
 
+function formatVal(val){
+  if (!isFinite(val)) return '0';
+  const x = Number(val);
+  return x.toFixed(1).replace(/\.0$/, '');
+}
+
+function formatFull(max){
+  if (!isFinite(max)) return '';
+  return max.toFixed(1).replace(/\.0$/, '');
+}
+
 function formatPart(val){
   if (!isFinite(val)) return 'n/a';
-  const x = val * 100;                       // 0.125 -> 12.5
-  return x === 0 ? '0' : x.toFixed(1);       // one digit; 0 -> "0"
+  const x = Number(val);
+  return x.toFixed(1).replace(/\.0$/, ''); // e.g., 9.0 → "9", 9.2 → "9.2"
 }
 
 function buildCompositeHTML(props){
-  const MAX_PART = 0.125;
-  const fs = Number(props.final_score);
+  // use composite_score if present, otherwise fall back to final_score
+  const fs = Number(props.composite_score ?? props.final_score);
 
   const header = `
     <div style="font:700 16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
                 margin:0 0 8px 0; text-align:center">
-      Completeness score: <b>${isFinite(fs) ? (fs * 100).toFixed(1) : 'n/a'}</b>
+      Completeness score: <b>${isFinite(fs) ? fs.toFixed(1) : 'n/a'}</b>
     </div>`;
 
-  const rows = SCORE_ITEMS.map(({label, prop}) => {
+  const rows = SCORE_ITEMS.map(({label, prop, max}) => {
     const val = Number(props[prop]);
-    const pct = isFinite(val) ? Math.max(0, Math.min(100, (val / MAX_PART) * 100)) : 0;
-    const color = barColor(isFinite(val) ? val : 0, MAX_PART);
+    const safeMax = (isFinite(max) && max > 0) ? max : 1;
+
+    // Track width = full mark relative to global max
+    const trackPct = Math.max(10, Math.min(100, (safeMax / GLOBAL_FULL_MAX) * 100));
+
+    // Fill width = value relative to its own full mark
+    const frac = isFinite(val) ? Math.max(0, Math.min(1, val / safeMax)) : 0;
+    const fillPct = frac * 100;
+
+    const color = barColor(val, safeMax);
 
     return `
       <div style="
         display:grid;
-        grid-template-columns: 100px 1fr 60px; /* narrower label column -> wider bar */
+        grid-template-columns: 100px 1fr 70px;
         gap:10px;
         align-items:center;
         margin:6px 0">
-        <div style="text-align:right; opacity:.9; white-space:nowrap">${label}</div>
-        <div style="height:10px; background:rgba(255,255,255,.14); border-radius:6px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)">
-          <div style="height:100%; width:${pct}%; background:${color}"></div>
+        
+        <div style="text-align:right; opacity:.9; white-space:nowrap">
+          ${label}
         </div>
-        <div style="font-variant-numeric: tabular-nums; color:rgba(255,255,255,.92)">${formatPart(val)}</div>
+
+        <div style="
+          height:10px;
+          background:rgba(255,255,255,.14);
+          border-radius:999px;
+          overflow:hidden;
+          box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+          width:${trackPct}%;
+          justify-self:flex-start">
+          <div style="
+            height:100%;
+            width:${fillPct}%;
+            background:${color};
+            transition:width .2s ease-out">
+          </div>
+        </div>
+
+        <div style="
+          font-variant-numeric: tabular-nums;
+          color:rgba(255,255,255,.92);
+          text-align:right">
+          <span style="font-size:12px;">${formatVal(val)}</span>
+          <span style="font-size:10px; opacity:.7; margin-left:2px;">
+            / ${formatFull(safeMax)}
+          </span>
+        </div>
       </div>`;
   }).join('');
 
@@ -330,10 +379,10 @@ const LAYER_DEFS = [
     key: 'composite',
     title: 'Composite final_score',
     sourceId: 'composite_score',
-    sourceUrl: 'mapbox://lsj8687.9ranu5mv',
+    sourceUrl: 'mapbox://lsj8687.1exi045a', // V3
     layerId: 'composite_score-line',
     type: 'line',
-    sourceLayer: 'temp_SCORE-3jih01',
+    sourceLayer: 'Composite_score_v3_vis-cc24d2', // V3
     paint: { 'line-color': finalColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: true,
     legend: { kind:'gradient', title:'Completeness Score', min: FINAL_THRESH[0], max: FINAL_THRESH.at(-1), stops: FINAL_STOPS, format: v => Math.round(v*100), width: 380, bottom: 60 }
@@ -362,12 +411,10 @@ const LAYER_DEFS = [
     key: 'bike',
     title: 'Bike lane (bike_type)',
     sourceId: 'bike_lane',
-    // sourceUrl: 'mapbox://lsj8687.cumhsq4k', // V2.0
-    sourceUrl: 'mapbox://lsj8687.bdg4mar5', // V3.0
+    sourceUrl: 'mapbox://lsj8687.8r2yxsa7', // V3.0
     layerId: 'bike_lane-line',
     type: 'line',
-    // sourceLayer: 'BIKELANE_top10_v2-0c94a0', // V2.0
-    sourceLayer: 'BIKELANE_top10_v3-15lpml', //V3.0
+    sourceLayer: 'BikeLane_ATTRIBUTE_v3-a6amjd', //V3.0
     paint: { 'line-color': bikeColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     legend: { kind:'cats', title:'Lane type', width: 180, cats:[
@@ -380,10 +427,10 @@ const LAYER_DEFS = [
     key: 'poi',
     title: 'Amenities (poi_access_score_adj_ln)',
     sourceId: 'poi',
-    sourceUrl: 'mapbox://lsj8687.d56dca7h',
+    sourceUrl: 'mapbox://lsj8687.83om6ega', // V3.0
     layerId: 'poi-line',
     type: 'line',
-    sourceLayer: 'POI_top10_v2-8qbwcw',
+    sourceLayer: 'Amenities_ATTRIBUTE_v3-1b4cyp', // V3.0
     paint: { 'line-color': poiColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     legend: { kind:'gradient', title:'Accessibility score', min:POI_THRESH[0], max:POI_THRESH.at(-1), stops:POI_STOPS, format:v=>v.toFixed(1) }
