@@ -53,7 +53,7 @@ function firstTextLabelLayerId() {
 
 // -------- Continuous Ramps (per element) --------
 // Composite final_score
-const FINAL_THRESH = [0.00, 0.2, 0.4, 0.6, 0.8, 1.00];
+const FINAL_THRESH = [0, 20, 40, 60, 80, 100];
 const FINAL_STOPS  = makeStops(FINAL_THRESH);
 const finalColor   = rampExpr('composite_score', FINAL_STOPS);
 
@@ -72,7 +72,7 @@ const transitColor   = rampExpr(TRANSIT_PROP, TRANSIT_STOPS);
 // Sidewalk (meter)
 const SIDEWALK_THRESH = [0, 1, 2, 4, 6, 12];
 const SIDEWALK_STOPS  = makeStops(SIDEWALK_THRESH);
-const sidewalkColor   = rampExpr('width', SIDEWALK_STOPS);
+const sidewalkColor   = rampExpr('SIDEWALK_attribute', SIDEWALK_STOPS);
 
 // Street buffer (meter)
 const STREETBUFFER_THRESH = [0, 0.5, 1, 2, 3, 6];
@@ -111,15 +111,15 @@ const parkingColor = [
 const hoverPopup = new mapboxgl.Popup({ closeButton:false, closeOnClick:false });
 
 const HOVER_FIELD = {
-  composite:   { label:'Composite score',          prop:'composite_score',             fmt:v => (+v).toFixed(3) },
+  composite:   { label:'Composite score',          prop:'composite_score',         fmt:v => (+v).toFixed(3) },
   vehicle:     { label:'Number of lanes',          prop:'num_lanes',               fmt:v => String(v) },
-  bike:        { label:'Bike lane type',           prop:'BIKE_attribute',               fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
+  bike:        { label:'Bike lane type',           prop:'BIKE_attribute',          fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
   poi:         { label:'Amenity accessibility score',  prop:'AMENITIES_attribute', fmt:v => (+v).toFixed(2) },
   parking:     { label:'Parking availability',     prop:'predicted_avail',         fmt:v => (Number(v)===1?'Yes (1)':'No (0)') },
   median:     { label:'Median presence',           prop:'median_value',            fmt: v => (Number(v)===1 ? 'Yes (1)' : 'No (0)')},
   transit:     { label:'Transit stop score',       prop:TRANSIT_PROP,              fmt:v => (+v).toFixed(1) },
-  sidewalk:    { label:'Sidewalk width (meter)',      prop:'width',          fmt:v => `${(+v).toFixed(1)} meter` },
-  streetbuffer:{ label:'Street buffer width (meter)', prop:'streetbuffer_width',      fmt:v => `${(+v).toFixed(1)} meter` }
+  sidewalk:    { label:'Sidewalk width (meter)',      prop:'SIDEWALK_attribute',   fmt:v => (v == null || isNaN(+v)) ? 'No sidewalk' : `${(+v).toFixed(1)}`},
+  streetbuffer:{ label:'Street buffer width (meter)', prop:'streetbuffer_width',   fmt:v => `${(+v).toFixed(1)} meter` }
 };
 
 // ---------- HOVER popup (composite score) ----------
@@ -385,7 +385,7 @@ const LAYER_DEFS = [
     sourceLayer: 'Composite_score_v3_vis-cc24d2', // V3
     paint: { 'line-color': finalColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: true,
-    legend: { kind:'gradient', title:'Completeness Score', min: FINAL_THRESH[0], max: FINAL_THRESH.at(-1), stops: FINAL_STOPS, format: v => Math.round(v*100), width: 380, bottom: 60 }
+    legend: { kind:'gradient', title:'Completeness Score', min: FINAL_THRESH[0], max: FINAL_THRESH.at(-1), stops: FINAL_STOPS, format: v => v.toFixed(0), width: 380, bottom: 60 }
   },
   {
     key: 'vehicle',
@@ -465,16 +465,23 @@ const LAYER_DEFS = [
   },
   {
     key: 'sidewalk',
-    title: 'Sidewalk (sidewalk_width)',
+    title: 'Sidewalk (SIDEWALK_attribute)',
     sourceId: 'sidewalk',
-    sourceUrl: 'mapbox://lsj8687.dm744rhw',
+    sourceUrl: 'mapbox://lsj8687.8v0pga14',
     layerId: 'sidewalk-line',
     type: 'line',
-    sourceLayer: 'SIDEWALK_15m_top10_v2-2tw6ic',
+    sourceLayer: 'Sidewalk_ATTRIBUTE_v3-5aqy4m',
     paint: {
       'line-color': [
-        'case', ['==', ['to-number', ['get', 'width']], 0], '#9e9e9e',
-        sidewalkColor
+        'case',
+          // NA / missing SIDEWALK_attribute → "No sidewalk" (grey)
+          ['any',
+            ['!', ['has', 'SIDEWALK_attribute']],
+            ['==', ['get', 'SIDEWALK_attribute'], null]
+          ],
+          '#9e9e9e',
+          // Otherwise, use the 0–8+ ramp
+          sidewalkColor
       ],
       'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6],
       'line-opacity': 0.95
@@ -482,11 +489,16 @@ const LAYER_DEFS = [
     visibleByDefault: false,
     styleMods: { underScale: 1.8, overScale: 0.6 },
     legend: {
-      kind: 'gradient', title: 'Sidewalk width (meter)',
-      min: SIDEWALK_THRESH[1], max: SIDEWALK_THRESH.at(-1),
-      stops: SIDEWALK_STOPS.filter(([v]) => v > 0),
-      tickVals: [1,2,4,6,12], format: v => (v===12?'12+':v.toFixed(0)),
-      extraCats: [ {label:'No sidewalk', color:'#9e9e9e'} ]
+      kind: 'gradient',
+      title: 'Sidewalk width (meter)',
+      min: SIDEWALK_THRESH[0],
+      max: SIDEWALK_THRESH.at(-1),
+      stops: SIDEWALK_STOPS,
+      tickVals: [0, 2, 4, 6, 8],
+      format: v => (v === 8 ? '8+' : v.toFixed(0)),
+      extraCats: [
+        { label: 'No sidewalk', color: '#9e9e9e' }
+      ]
     }
   },
   {
