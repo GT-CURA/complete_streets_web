@@ -165,8 +165,15 @@ function formatPart(val){
   return x.toFixed(1).replace(/\.0$/, ''); // e.g., 9.0 → "9", 9.2 → "9.2"
 }
 
-function buildCompositeHTML(props){
-  // use composite_score if present, otherwise fall back to final_score
+function getStreetviewUrl(props){
+  const linkId = props.link_id;   // property from the vector tile
+  if (!linkId) return null;
+
+  // Adjust extension if needed (.png, .jpeg, etc.)
+  return `assets/3_streetview/${linkId}.jpg`;
+}
+
+function buildCompositeHTML(props, imgUrl){
   const fs = Number(props.composite_score ?? props.final_score);
 
   const header = `
@@ -179,13 +186,9 @@ function buildCompositeHTML(props){
     const val = Number(props[prop]);
     const safeMax = (isFinite(max) && max > 0) ? max : 1;
 
-    // Track width = full mark relative to global max
     const trackPct = Math.max(10, Math.min(100, (safeMax / GLOBAL_FULL_MAX) * 100));
-
-    // Fill width = value relative to its own full mark
     const frac = isFinite(val) ? Math.max(0, Math.min(1, val / safeMax)) : 0;
     const fillPct = frac * 100;
-
     const color = barColor(val, safeMax);
 
     return `
@@ -228,14 +231,40 @@ function buildCompositeHTML(props){
       </div>`;
   }).join('');
 
+// Street view image block
+const imgBlock = imgUrl ? `
+  <div style="
+    margin:10px 0 8px;
+    border-radius:10px;
+    overflow:hidden;
+    position:relative;
+    width:100%;
+    padding-top:66.6667%; /* height = 2/3 of width (3:2 aspect) */
+  ">
+    <img 
+      src="${imgUrl}" 
+      alt="Street view imagery for this road segment"
+      style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        width:100%;
+        height:100%;
+        transform:translate(-50%, -50%);
+        object-fit:cover;
+        display:block;
+      ">
+  </div>
+` : '';
+
   return `
     <div style="min-width:340px; max-width:520px; background:rgba(0,0,0,.85);
                 padding:10px 12px 12px; border-radius:10px; color:#fff;">
-      ${header}${rows}
+      ${header}
+      ${imgBlock}
+      ${rows}
     </div>`;
 }
-
-
 
 // ---------- LEGENED (gradient / ramp / categories) ----------
 const toPct = (v, min, max) => ((v - min) / (max - min)) * 100;
@@ -661,9 +690,13 @@ map.on('load', () => {
     const f = e.features?.[0];
     if (!f) return;
     hoverPopup.remove();
-    new mapboxgl.Popup({ closeButton:true, maxWidth:'420px' })
+
+    const props  = f.properties || {};
+    const imgUrl = getStreetviewUrl(props);   // uses props.link_id
+
+    new mapboxgl.Popup({ closeButton:true, maxWidth:'520px' })
       .setLngLat(e.lngLat)
-      .setHTML(buildCompositeHTML(f.properties || {}))
+      .setHTML(buildCompositeHTML(props, imgUrl))
       .addTo(map);
   });
 });
