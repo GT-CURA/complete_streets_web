@@ -174,7 +174,11 @@ function getStreetviewUrl(props){
 }
 
 function buildCompositeHTML(props, imgUrl){
-  const fs = Number(props.composite_score ?? props.final_score);
+  const fs = Number(props.composite_score);
+  const panoDate = (props.pano_date_month && props.pano_date_year)
+    ? `${props.pano_date_month} ${props.pano_date_year}`
+    : (props.pano_date_year || props.pano_date_month || null);
+
 
   const header = `
     <div style="font:700 16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -231,37 +235,50 @@ function buildCompositeHTML(props, imgUrl){
       </div>`;
   }).join('');
 
-// Street view image block
-const imgBlock = imgUrl ? `
-  <div style="
-    margin:10px 0 8px;
-    border-radius:10px;
-    overflow:hidden;
-    position:relative;
-    width:100%;
-    padding-top:66.6667%; /* height = 2/3 of width (3:2 aspect) */
-  ">
-    <img 
-      src="${imgUrl}" 
-      alt="Street view imagery for this road segment"
-      style="
-        position:absolute;
-        top:50%;
-        left:50%;
-        width:100%;
-        height:100%;
-        transform:translate(-50%, -50%);
-        object-fit:cover;
-        display:block;
-      ">
-  </div>
-` : '';
+  // Street view image block
+  const imgBlock = imgUrl ? `
+    <div style="
+      margin:10px 0 8px;
+      border-radius:10px;
+      overflow:hidden;
+      position:relative;
+      width:100%;
+      padding-top:66.6667%; /* height = 2/3 of width (3:2 aspect) */
+    ">
+      <img 
+        src="${imgUrl}" 
+        alt="Street view imagery for this road segment"
+        style="
+          position:absolute;
+          top:50%;
+          left:50%;
+          width:100%;
+          height:100%;
+          transform:translate(-50%, -50%);
+          object-fit:cover;
+          display:block;
+        ">
+    </div>
+  ` : '';
+
+  // pano_date text
+  const panoBlock = panoDate ? `
+    <div style="
+      margin:2px 0 6px;
+      font-size:11px;
+      color:rgba(255, 255, 255, 0.7);
+      text-align:left;
+    ">
+      Captured: ${panoDate}
+    </div>
+  ` : '';
 
   return `
     <div style="min-width:340px; max-width:520px; background:rgba(0,0,0,.85);
                 padding:10px 12px 12px; border-radius:10px; color:#fff;">
       ${header}
       ${imgBlock}
+      ${panoBlock}
       ${rows}
     </div>`;
 }
@@ -408,10 +425,10 @@ const LAYER_DEFS = [
     key: 'composite',
     title: 'Composite final_score',
     sourceId: 'composite_score',
-    sourceUrl: 'mapbox://lsj8687.1exi045a', // V3
+    sourceUrl: 'mapbox://lsj8687.5eyickps', // V3
     layerId: 'composite_score-line',
     type: 'line',
-    sourceLayer: 'Composite_score_v3_vis-cc24d2', // V3
+    sourceLayer: 'Composite_score_v3_vis_panoim-6as8b3', // V3
     paint: { 'line-color': finalColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: true,
     legend: { kind:'gradient', title:'Completeness Score', min: FINAL_THRESH[0], max: FINAL_THRESH.at(-1), stops: FINAL_STOPS, format: v => v.toFixed(0), width: 380, bottom: 60 }
@@ -692,13 +709,15 @@ map.on('load', () => {
     hoverPopup.remove();
 
     const props  = f.properties || {};
-    const imgUrl = getStreetviewUrl(props);   // uses props.link_id
+    console.log('Composite props:', props);   // 👈 add this
+    const imgUrl = getStreetviewUrl(props);
 
     new mapboxgl.Popup({ closeButton:true, maxWidth:'520px' })
       .setLngLat(e.lngLat)
       .setHTML(buildCompositeHTML(props, imgUrl))
       .addTo(map);
   });
+
 });
 
 // Only zoom with Ctrl (or ⌘ on Mac)
