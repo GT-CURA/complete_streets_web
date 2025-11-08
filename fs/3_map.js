@@ -59,25 +59,30 @@ const finalColor   = rampExpr('composite_score', FINAL_STOPS);
 
 // POI
 const POI_PROP   = 'AMENITIES_attribute';
-const POI_THRESH = [0.0, 1.0, 1.5, 2.0, 2.5, 3.0];
+const POI_THRESH = [0, 0.6, 1.2, 1.8, 2.4, 3.0];
 const POI_STOPS  = makeStops(POI_THRESH);
 const poiColor   = rampExpr(POI_PROP, POI_STOPS);
 
 // Transit
 const TRANSIT_PROP   = 'transit_score';
-const TRANSIT_THRESH = [0, 5, 10, 20, 30, 40];
+const TRANSIT_THRESH = [0, 8, 16, 24, 32, 40];
 const TRANSIT_STOPS  = makeStops(TRANSIT_THRESH);
 const transitColor   = rampExpr(TRANSIT_PROP, TRANSIT_STOPS);
 
 // Sidewalk (meter)
-const SIDEWALK_THRESH = [0, 1, 2, 4, 6, 12];
+const SIDEWALK_THRESH = [0, 1, 2, 4, 6, 8];
 const SIDEWALK_STOPS  = makeStops(SIDEWALK_THRESH);
 const sidewalkColor   = rampExpr('SIDEWALK_attribute', SIDEWALK_STOPS);
 
 // Street buffer (meter)
-const STREETBUFFER_THRESH = [0, 0.5, 1, 2, 3, 6];
+const STREETBUFFER_THRESH = [0, 1, 2, 3, 4, 5];
 const STREETBUFFER_STOPS  = makeStops(STREETBUFFER_THRESH);
-const streetbufferColor   = rampExpr('streetbuffer_width', STREETBUFFER_STOPS);
+const streetbufferColor = [
+  'case',
+  ['==', ['get', 'STREETBUFFER_attribute'], null], '#9e9e9e',  // NA as gray
+  ['==', ['get', 'STREETBUFFER_attribute'], 'NA'], '#9e9e9e',  // NA string as gray
+  rampExpr('STREETBUFFER_attribute', STREETBUFFER_STOPS)  // Use gradient starting from 0
+];
 
 // Vehicular road (continuous lanes → gradient)
 const VEHICLE_PROP   = 'num_lanes';
@@ -119,7 +124,7 @@ const HOVER_FIELD = {
   median:     { label:'Median presence',           prop:'median_value',            fmt: v => (Number(v)===1 ? 'Yes (1)' : 'No (0)')},
   transit:     { label:'Transit stop score',       prop:TRANSIT_PROP,              fmt:v => (+v).toFixed(1) },
   sidewalk:    { label:'Sidewalk width (meter)',      prop:'SIDEWALK_attribute',   fmt:v => (v == null || isNaN(+v)) ? 'No sidewalk' : `${(+v).toFixed(1)}`},
-  streetbuffer:{ label:'Street buffer width (meter)', prop:'streetbuffer_width',   fmt:v => `${(+v).toFixed(1)} meter` }
+  streetbuffer:{ label:'Street buffer width (meter)', prop:'STREETBUFFER_attribute',   fmt:v => (v == null || isNaN(+v)) ? 'No street buffer' : `${(+v).toFixed(1)}`},
 };
 
 // ---------- HOVER popup (composite score) ----------
@@ -479,7 +484,7 @@ const LAYER_DEFS = [
     sourceLayer: 'Amenities_ATTRIBUTE_v3-1b4cyp', // V3.0
     paint: { 'line-color': poiColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
-    legend: { kind:'gradient', title:'Accessibility score', min:POI_THRESH[0], max:POI_THRESH.at(-1), stops:POI_STOPS, format:v=>v.toFixed(1) }
+    legend: { kind:'gradient', title:'Accessibility score', min:POI_THRESH[0], max:POI_THRESH.at(-1), stops:POI_STOPS, tickVals:[0, 1, 2, 3], format:v=>(v===3?'3+':v.toFixed(0)) }
   },
   {
     key: 'parking',
@@ -507,7 +512,7 @@ const LAYER_DEFS = [
     sourceLayer: 'TRANSITSTOP_top10_v2-6aqb06',
     paint: { 'line-color': transitColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
-    legend: { kind:'gradient', title:'Transit score', min:TRANSIT_THRESH[0], max:TRANSIT_THRESH.at(-1), stops:TRANSIT_STOPS, format:v=>v.toFixed(1) }
+    legend: { kind:'gradient', title:'Transit score', min:TRANSIT_THRESH[0], max:TRANSIT_THRESH.at(-1), stops:TRANSIT_STOPS, tickVals:[0, 10, 20, 30, 40], format:v=>(v===40?'40+':v.toFixed(0)) }
   },
   {
     key: 'sidewalk',
@@ -573,15 +578,12 @@ const LAYER_DEFS = [
     key: 'streetbuffer',
     title: 'Street buffer (streetbuffer_width)',
     sourceId: 'street_buffer',
-    sourceUrl: 'mapbox://lsj8687.8h82hxa4',
+    sourceUrl: 'mapbox://lsj8687.cfqcqpes',
     layerId: 'street_buffer-line',
     type: 'line',
-    sourceLayer: 'STREETBUFFER_20m_top10_v2-arcpq3',
+    sourceLayer: 'StreetBuffer_ATTRIBUTE_v3-22bx81',
     paint: {
-      'line-color': [
-        'case', ['==', ['to-number', ['get', 'streetbuffer_width']], 0], '#9e9e9e',
-        streetbufferColor
-      ],
+      'line-color': streetbufferColor,
       'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6],
       'line-opacity': 0.95
     },
@@ -589,10 +591,10 @@ const LAYER_DEFS = [
     styleMods: { underScale: 1.8, overScale: 0.6 },
     legend: {
       kind:'gradient', title:'Street buffer width (meter)',
-      min: STREETBUFFER_THRESH[1], max: STREETBUFFER_THRESH.at(-1),
-      stops: STREETBUFFER_STOPS.filter(([v]) => v > 0),
-      tickVals: [0.5,1,2,3,6], format:v=> (v===6?'6+':v.toFixed(1)),
-      extraCats: [ {label:'No buffer', color:'#9e9e9e'} ]
+      min: STREETBUFFER_THRESH[0], max: STREETBUFFER_THRESH.at(-1),
+      stops: STREETBUFFER_STOPS,
+      tickVals: [0, 1, 2, 3, 4, 5], format:v=> (v===5?'5+':v.toFixed(0)),
+      extraCats: [ {label:'No buffer (NA)', color:'#9e9e9e'} ]
     }
   }
 ];
