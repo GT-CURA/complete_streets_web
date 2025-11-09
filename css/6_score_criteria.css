@@ -1,0 +1,150 @@
+/* Score Criteria Section: same shell as other sections */
+#s6.score-criteria{
+  padding: 80px var(--page-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+#s6 .sec-title{
+  position: absolute;
+  top: 20px;
+  left: 40px;
+}
+
+/* Text block width matches other methodology sections */
+#s6 .rf-heading{
+  width: 90vw;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+/* Figure holding the table */
+.sc-figure{
+  width: 90vw;
+  max-width: var(--container-max);
+  margin: 24px auto 0;
+}
+
+/* Table container fills the figure width */
+.sc-table-wrap{
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+/* Main table */
+.sc-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font: 400 13px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e1dcc8;
+}
+
+/* Header row */
+.sc-table thead{
+  background: #fdf7e6;
+}
+
+.sc-table th{
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e1dcc8;
+}
+
+/* Body rows */
+.sc-table td{
+  padding: 9px 12px;
+  border-bottom: 1px solid #f3ebd4;
+}
+
+/* Remove border under last row */
+.sc-table tr:last-child td{
+  border-bottom: none;
+}
+
+/* Clickable rows – future popup hook */
+.sc-row{
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.sc-row:hover{
+  background: #fff4d0;
+  transform: translateY(-1px);
+}
+
+/* Mobile: allow horizontal scroll if needed */
+@media (max-width: 720px){
+  .sc-figure{
+    overflow-x: auto;
+  }
+
+  .sc-table-wrap{
+    min-width: 600px;  /* keep columns legible, scroll if too narrow */
+  }
+}
+
+.sc-table {
+  color: #3b3423; /* dark brownish, matches your other sections */
+}
+
+/* Adjust table layout for 6 columns */
+.sc-table th,
+.sc-table td {
+  padding: 8px 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.sc-table td:nth-child(5) {
+  text-align: left;  /* allow multiline formulas to read naturally */
+}
+
+.sc-table td:nth-child(6),
+.sc-table th:nth-child(6) {
+  font-weight: 600;
+  color: #1e2a57; /* darker blue accent for final scores */
+}
+
+/* Optional color accent for computation rule column */
+.sc-table td:nth-child(4),
+.sc-table th:nth-child(4) {
+  color: #3a528b;
+  font-style: italic;
+}
+
+.sc-table th,
+.sc-table td {
+  padding: 10px 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.sc-table td:nth-child(4) {
+  text-align: left;
+  color: #4a4332;
+}
+
+.sc-table td:nth-child(5),
+.sc-table th:nth-child(5) {
+  font-weight: 600;
+  color: #1e2a57;
+}
+
+/* Footnote styling */
+.sc-footnote {
+  max-width: 90vw;
+  margin: 12px auto 0;
+  font: 400 12px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #6b634f;
+  text-align: left;
+}

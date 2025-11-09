@@ -18,12 +18,15 @@
   <script src="fs/0_side_menu.js" defer></script>
   <script src="fs/3_map.js" defer></script>
   <script src="fs/4_data_collection.js" defer></script>
+  <script src="fs/5_weight_full.js" defer></script>
   <script src="fs/7_about.js" defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/2_research_objective.css">
   <link rel="stylesheet" href="css/3_map.css">
   <link rel="stylesheet" href="css/4_data_collection.css">
+  <link rel="stylesheet" href="css/5_weight_full.css">
+  <link rel="stylesheet" href="css/6_score_criteria.css">
   <link rel="stylesheet" href="css/7_about.css">
   <link rel="stylesheet" href="css/0_side_menu.css">
 </head>
@@ -192,14 +195,126 @@
     </section>
 
 
+    <!-- (5) Weight Assignment -->
+    <section id="s5" class="weight-assignment" aria-labelledby="wa-title">
+      <div class="sec-title"><h2 id="wa-title">Weight Assignment</h2></div>
 
-    <!-- (5) How to assign weights? -->
-    <section id="s5"><h2>Section 5</h2></section>
+      <div class="rf-heading">
+        <div class="rf-text reveal" id="wa-text">
+          To compute the <span class="highlight">Composite Completeness Score</span> (out of 100), each street element is assigned a <strong>weight</strong>—its full mark—based on how much it contributes to five key Complete Streets (CS) benefits. The workflow below shows how we translate design manuals into contribution scores and, finally, the full marks for each element.
+        </div>
+      </div>
+
+      <figure class="wa-figure reveal">
+        <div id="wa-flow" class="wa-flow-row"></div>
+      </figure>
+    </section>
+
+    <div id="wa-popup-overlay" class="wa-popup-overlay" aria-hidden="true">
+      <div class="wa-popup" role="dialog" aria-modal="true">
+        <button class="wa-popup-close" aria-label="Close">×</button>
+        <h3 class="wa-popup-title"></h3>
+        <p class="wa-popup-body"></p>
+      </div>
+    </div>  
 
 
+    <!-- (6) Score Conversion Criteria -->
+    <section id="s6" class="score-criteria" aria-labelledby="sc-title">
+      <div class="sec-title">
+        <h2 id="sc-title">Score Conversion Criteria</h2>
+      </div>
 
-    <!-- (6) How to evluate the score of each element -->
-    <section id="s6"><h2>Section 6</h2></section>
+      <div class="rf-heading">
+        <div class="rf-text reveal" id="sc-text">
+          Each attribute value is converted to its corresponding score range of <strong>0&nbsp;–&nbsp;(full mark)</strong>, proportionally based on its observed range and capped at the full mark. These ranges were defined using a hybrid approach that combines empirical data from five benchmark US cities with design thresholds drawn from municipal and federal street design manuals. The table below summarizes the scoring criteria for all eight elements used in the composite score.
+        </div>
+      </div>
+
+      <figure class="sc-figure reveal">
+        <div class="sc-table-wrap">
+
+          <table class="sc-table">
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th>Presence</th>
+                <th>Attributes</th>
+                <th>Score Range</th>
+                <th>Full Mark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sidewalk</td>
+                <td>Both sides</td>
+                <td>Width</td>
+                <td>Wider sidewalk → higher score (up to 5 m = full mark)</td>
+                <td>21.9</td>
+              </tr>
+              <tr>
+                <td>Street buffer</td>
+                <td>Both sides</td>
+                <td>Width</td>
+                <td>Wider buffer → higher score (up to 2.5 m = full mark)</td>
+                <td>18.8</td>
+              </tr>
+              <tr>
+                <td>Bike lane</td>
+                <td>Centerline</td>
+                <td>Type</td>
+                <td>Protected &gt; Designated &gt; None</td>
+                <td>16.4</td>
+              </tr>
+              <tr>
+                <td>Transit stop</td>
+                <td>Within a walkshed</td>
+                <td>Accessibility Score</td>
+                <td>Higher accessibility → higher score (capped at full mark)</td>
+                <td>12.6</td>
+              </tr>
+              <tr>
+                <td>Median</td>
+                <td>Centerline</td>
+                <td>NA (binary)</td>
+                <td>Existing = full mark; None = 0</td>
+                <td>9.3</td>
+              </tr>
+              <tr>
+                <td>POI (amenities)</td>
+                <td>Within a walkshed</td>
+                <td>Accessibility Score</td>
+                <td>Higher accessibility → higher score (capped at full mark)</td>
+                <td>9.2</td>
+              </tr>
+              <tr>
+                <td>Street parking</td>
+                <td>Both sides</td>
+                <td>NA (binary)</td>
+                <td>Existing = half mark per side; None = 0</td>
+                <td>9.2</td>
+              </tr>
+              <tr>
+                <td>Vehicular road</td>
+                <td>Centerline</td>
+                <td># of lanes</td>
+                <td>Closer to standard (4 or 3 lanes) → higher score</td>
+                <td>2.6</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="sc-footnote">
+            * For elements present on both sides (e.g., sidewalks, buffers, parking), scores are calculated separately per side and then summed.<br>
+            ** “Standard” lane count = 4 for trunk/primary/secondary roads, 3 for tertiary roads.
+          </p>
+
+        
+        </div>
+      </figure>
+    </section>
+
+
 
 
 

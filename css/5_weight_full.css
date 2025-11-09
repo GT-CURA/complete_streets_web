@@ -1,0 +1,451 @@
+:root{
+  --wa-card-bg: #fdf7e6;
+  --wa-card-border: #e0d2aa;
+  --wa-card-radius: 18px;
+  --container-max: 1700px;
+}
+
+/* Section shell (match other sections) */
+#s5.weight-assignment{
+  padding: 80px var(--page-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+#s5 .sec-title{
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  text-align: left;
+}
+
+/* Match Section 2 widths */
+#s5 .rf-heading,
+#s5 .wa-figure{
+  width: 90vw;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+/* Row of four big objects */
+.wa-flow-row{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Base card */
+.wa-card{
+  background: var(--wa-card-bg);
+  border-radius: var(--wa-card-radius);
+  border: 1px solid var(--wa-card-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+}
+
+.wa-flow-row .wa-card:nth-child(1),
+.wa-flow-row .wa-card:nth-child(2){
+  overflow: visible;
+}
+
+/* Arrows between Step 1 → 2 and Step 2 → 3 */
+.wa-flow-row .wa-card:nth-child(1)::after,
+.wa-flow-row .wa-card:nth-child(2)::after{
+  content: "➔";
+  position: absolute;
+  top: 50%;
+  right: -22px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #d0b87a;
+  pointer-events: none;
+}
+
+/* Small header label (Step 1 / 2 / 3 / etc.) */
+.wa-kicker{
+  font: 600 11px/1.3 system-ui, -apple-system, Segoe UI, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #9b8554;
+  margin-bottom: 6px;
+}
+
+.wa-title{
+  font: 700 16px/1.3 system-ui, -apple-system, Segoe UI, sans-serif;
+  margin: 0 0 8px 0;
+  color: #3b3423;
+}
+
+.wa-subtitle{
+  font: 400 13px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #6b634f;
+  margin-bottom: 10px;
+}
+
+.wa-steps{
+  margin-top: 4px;
+  display: grid;
+  gap: 6px;
+}
+
+.wa-step{
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e1dcc8;
+  padding: 6px 8px;
+  font: 400 12px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #4a4332;
+  position: relative;
+}
+
+.wa-step::after{
+  content: "↓";
+  position: absolute;
+  left: 50%;
+  bottom: -13px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #b09a67;
+}
+
+.wa-step:last-child::after{
+  display: none;
+}
+
+/* Tiny “table” blocks under the step list */
+.wa-mini-table{
+  margin-top: 10px;
+  border-radius: 10px;
+  background: #fefae0;
+  border: 1px solid #e1dcc8;
+  padding: 6px 8px;
+  font: 400 11px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #4a4332;
+}
+
+.wa-mini-table-header{
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Bars card overrides */
+.wa-card-bars{
+  background: #16181d;
+  color: #f5f5f5;
+  border-color: #2b2e38;
+}
+
+.wa-card-bars .wa-kicker{
+  color: #91c4ff;
+}
+
+.wa-card-bars .wa-title{
+  color: #ffffff;
+}
+
+.wa-bars-wrap{
+  margin-top: 10px;
+  display: grid;
+  gap: 12px;
+}
+
+.wa-bar-row{
+  display: grid;
+  grid-template-columns: 112px 1fr 50px;
+  gap: 8px;
+  align-items: center;
+}
+
+.wa-bar-label{
+  font: 450 15px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+  text-align: right;
+  opacity: 0.95;
+}
+
+.wa-bar-track{
+  position: relative;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+.wa-bar-fill{
+  height: 100%;
+  border-radius: inherit;
+  transition: width .25s ease-out;
+}
+
+.wa-bar-value{
+  font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, sans-serif;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive: 2×2 on medium, stacked on small */
+@media (max-width: 1200px){
+  .wa-flow-row{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px){
+  .wa-flow-row{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Example sentence sheet (Step 1 + Step 2) */
+.wa-sheet-stack{
+  position: relative;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 260px;
+  height: 90px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wa-sheet{
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  border: 1px solid #c8c8c8;
+  background: #fefae0;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  font: 400 11px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #333;
+  overflow: hidden;
+}
+
+/* Back “shadow” sheets */
+.wa-sheet.back-1{
+  transform: translate(4px, -4px);
+  opacity: 0.6;
+}
+.wa-sheet.back-2{
+  transform: translate(8px, -8px);
+  opacity: 0.35;
+}
+
+/* Front sheet content */
+.wa-sheet.front{
+  padding: 4px 6px;
+}
+
+.wa-sheet-header,
+.wa-sheet-row{
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 4px;
+  align-items: center;
+}
+
+/* center-align all values in Step 1 sheet */
+.wa-sheet-header span,
+.wa-sheet-row span{
+  text-align: center;
+}
+
+.wa-sheet-header{
+  font-weight: 600;
+  border-bottom: 1px solid #d7d7d7;
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+}
+
+.wa-sheet-row{
+  font-weight: 400;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.wa-sheet-row em{
+  font-style: italic;
+}
+
+/* Step 2: stacked matrix sheet, same style as Step 1 */
+.wa-sheet-stack-matrix{
+  margin-top: 10px;
+  width: 100%;
+  max-width: 280px;
+  height: 90px;
+}
+
+.wa-sheet-stack.wa-sheet-stack-matrix{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wa-sheet-matrix{
+  padding: 4px 6px;
+}
+
+/* 7-column grid: N | Sentence | B1–B5 */
+.wa-sheet-header-matrix,
+.wa-sheet-row-matrix{
+  display: grid;
+  grid-template-columns: 26px 1.4fr repeat(5, 0.7fr);
+  gap: 2px;
+  align-items: center;
+  font: 400 11px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+/* center-align all Step 2 sheet values */
+.wa-sheet-header-matrix span,
+.wa-sheet-row-matrix span{
+  text-align: center;
+}
+
+.wa-sheet-header-matrix{
+  font-weight: 600;
+  border-bottom: 1px solid #d7d7d7;
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+}
+
+.wa-sheet-row-matrix{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Step 3: example tables */
+.wa-step3-examples{
+  display: flex;
+  flex-direction: column;   /* stack the two examples */
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+
+.wa-example-block{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wa-example-caption{
+  font: 600 11px/1.3 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #6b634f;
+}
+
+/* Shared table styling – single outline, no internal grid */
+.wa-example-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font: 400 11px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #333;
+  background: #fefae0;
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+.wa-example-table th,
+.wa-example-table td{
+  padding: 2px 6px;
+  border: none;
+  text-align: center;   /* center-align all example data values */
+}
+
+/* header: bold with a single bottom border */
+.wa-example-table thead th{
+  font-weight: 600;
+  border-bottom: 1px solid #d7d7d7;
+  background: #fefae0;
+}
+
+/* ellipsis row styling */
+.wa-example-table td[colspan]{
+  color: #999;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Large-screen tweaks: more breathing room & slightly larger cards */
+@media (min-width: 1400px){
+  #s5 .rf-heading{
+    margin-bottom: 32px;
+  }
+
+  .wa-flow-row{
+    gap: 24px;
+  }
+
+  .wa-card{
+    padding: 22px 24px;
+    font-size: 0.96rem;
+  }
+
+  .wa-sheet-stack,
+  .wa-sheet-stack.wa-sheet-stack-matrix{
+    max-width: 320px;
+    height: 100px;
+  }
+}
+
+/* Popup overlay for Weight Assignment */
+.wa-popup-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.wa-popup-overlay.is-visible{
+  display: flex;
+}
+
+.wa-popup{
+  background: #16181d;
+  color: #f5f5f5;
+  border-radius: 18px;
+  padding: 22px 26px;
+  max-width: 460px;
+  width: 90vw;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+  font: 400 14px/1.6 system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+.wa-popup-title{
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.wa-popup-body{
+  margin: 0;
+  color: #d3d5dc;
+}
+
+.wa-popup-close{
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: none;
+  background: transparent;
+  color: #f5f5f5;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+body.wa-no-scroll{
+  overflow: hidden;
+}
