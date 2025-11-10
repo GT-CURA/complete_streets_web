@@ -122,6 +122,23 @@
   display: none;
 }
 
+/* Make popup-enabled steps feel clickable */
+.wa-step[data-popup]{
+  cursor: pointer;
+  transition: background 0.18s ease-out, 
+              box-shadow 0.18s ease-out,
+              transform 0.18s ease-out,
+              border-color 0.18s ease-out;
+}
+
+.wa-step[data-popup]:hover{
+  background: #fffaf0;                 /* slightly warmer highlight */
+  border-color: #d3c18e;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+
 /* Tiny “table” blocks under the step list */
 .wa-mini-table{
   margin-top: 10px;
@@ -376,6 +393,29 @@
   letter-spacing: 1px;
 }
 
+/* Step 3 – Table 1: color Total column values blue */
+.wa-example-table-sum tbody td:last-child {
+  color: #219ebc;  
+  font-weight: 600;
+}
+
+/* Step 3 – Table 2: color B₁–B₅ values red */
+.wa-example-table-n tbody td:nth-child(n+2):nth-child(-n+6) {
+  color: #fb8500; 
+  font-weight: 600;
+}
+
+/* Colored text inside the Step 3 description */
+.wa-text-blue {
+  color: #219ebc;
+  font-weight: 600;
+}
+
+.wa-text-red {
+  color: #fb8500;
+  font-weight: 600;
+}
+
 /* Large-screen tweaks: more breathing room & slightly larger cards */
 @media (min-width: 1400px){
   #s5 .rf-heading{
@@ -402,39 +442,58 @@
 .wa-popup-overlay{
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
-  display: none;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 13vh;
   z-index: 999;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
 }
 
 .wa-popup-overlay.is-visible{
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
+/* The popup card itself */
 .wa-popup{
+  position: relative;
   background: #16181d;
   color: #f5f5f5;
   border-radius: 18px;
-  padding: 22px 26px;
-  max-width: 460px;
-  width: 90vw;
+  padding: 24px 20px 20px 24px; /* top | right | bottom | left */
+  width: 62vw;
+  min-width: 360px;
   box-shadow: 0 18px 45px rgba(0,0,0,0.35);
   font: 400 14px/1.6 system-ui, -apple-system, Segoe UI, sans-serif;
 }
 
+/* Title + body inside the popup */
 .wa-popup-title{
-  margin: 0 0 8px 0;
+  margin: 0 28px 8px 0;
   font-size: 18px;
   font-weight: 700;
 }
 
 .wa-popup-body{
   margin: 0;
-  color: #d3d5dc;
+  max-width: 100%;
 }
 
+/* Make sure any global p-styles don't shrink the text column */
+.wa-popup p{
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Close button in the top-right corner of the popup card */
 .wa-popup-close{
   position: absolute;
   top: 10px;
@@ -442,10 +501,30 @@
   border: none;
   background: transparent;
   color: #f5f5f5;
-  font-size: 22px;
+  font-size: 20px;
+  font-weight: 500;
   cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
 }
 
+.wa-popup-close:hover{
+  color: #ffd27f;
+}
+
+/* Lock background scroll when popup open */
 body.wa-no-scroll{
   overflow: hidden;
 }
+
+.wa-popup-img {
+  display: block;
+  width: 100%;           
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+

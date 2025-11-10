@@ -229,12 +229,7 @@ const DC_CONTENT = {
         <li>For cases where sidewalk edges are not correctly detected via the deep learning model, use a manual annotation tool to complement</li>
       </ol>
       <div style="margin-top:8px;">
-        Find out more details on calculating sidewalk width 
-        <a href="https://doi.org/10.1177/23998083251369602" 
-          target="_blank" 
-          style="color:#03A9F4; text-decoration:underline;">
-          here
-        </a>.
+        Find out more details on calculating sidewalk width <a href="https://doi.org/10.1177/23998083251369602" target="_blank" style="color:#03A9F4; text-decoration:underline;">here</a>.
       </div>`,
     output: `Sidewalk presence and estimated width`,
     link: "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/sidewalk"
@@ -253,12 +248,7 @@ const DC_CONTENT = {
         <li>Apply the pretrained model to identify bike lane presence and type</li>
       </ol>
       <div style="margin-top:8px;">
-        Find out how we trained the model 
-        <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5599538" 
-          target="_blank" 
-          style="color:#03A9F4; text-decoration:underline;">
-          here
-        </a>.
+        Find out how we trained the model <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5599538" target="_blank" style="color:#03A9F4; text-decoration:underline;">here</a>.
       </div>`,
     output: `Three categories: No bike lane, Designated, or Protected`,
     link: "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/bike_lane"
@@ -287,7 +277,7 @@ const DC_CONTENT = {
     data:  `• GTFS <br> • GSVs`,
     how:   ``,
     output:`Stop presence, shelter flag, and service frequency bucket.`,
-    link:  "https://example.com/transit"
+    link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/transit_stop"
   },
   "median": {
     title: "Median",
@@ -295,7 +285,7 @@ const DC_CONTENT = {
     data:  `• GDOT`,
     how:   `-`,
     output:`Median presence`,
-    link:  "https://example.com/median"
+    link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/median"
   },
   "vehicular": {
     title: "Vehicular road",
@@ -303,15 +293,24 @@ const DC_CONTENT = {
     data:  `• GDOT`,
     how:   `-`,
     output:`Lane count`,
-    link:  "https://example.com/vehicular"
+    link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/vehicular_road"
   },
   "street-buffer": {
     title: "Street buffer",
     pill:  "Street buffer",
-    data:  `• Street-view segmentation`,
-    how:   `Detect buffer...`,
-    output:`Buffer presence, and width`,
-    link:  "https://example.com/street-buffer"
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>For one side of the road, two street view images with different pitch angles (0° and −10°)</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Capture two street view images perpendicular to the road direction</li>
+        <li>Apply semantic segmentation and Canny edge detection to extract the sidewalk bottom edge and road edge</li>
+        <li>Use trigonometric functions to calculate street buffer width</li>
+        <li>For cases where sidewalk or road edges are not correctly detected via the deep learning model, use a manual annotation tool to complement</li>
+      </ol>`,
+    output: `Street buffer presence and estimated width`,
+    link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/street_buffer"
   },
   "parking": {
     title: "Street parking",
@@ -319,7 +318,7 @@ const DC_CONTENT = {
     data:  `• GSV`,
     how:   `2 Approches.`,
     output:`Parking presence, side, and restriction class`,
-    link:  "https://example.com/parking"
+    link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/street_parking"
   }
 };
 

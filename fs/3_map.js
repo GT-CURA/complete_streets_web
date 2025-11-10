@@ -64,8 +64,8 @@ const POI_STOPS  = makeStops(POI_THRESH);
 const poiColor   = rampExpr(POI_PROP, POI_STOPS);
 
 // Transit
-const TRANSIT_PROP   = 'transit_score';
-const TRANSIT_THRESH = [0, 8, 16, 24, 32, 40];
+const TRANSIT_PROP   = 'TRANSIT_attribute';
+const TRANSIT_THRESH = [0, 6, 12, 18, 24, 30];
 const TRANSIT_STOPS  = makeStops(TRANSIT_THRESH);
 const transitColor   = rampExpr(TRANSIT_PROP, TRANSIT_STOPS);
 
@@ -85,17 +85,17 @@ const streetbufferColor = [
 ];
 
 // Vehicular road (continuous lanes → gradient)
-const VEHICLE_PROP   = 'num_lanes';
+const VEHICLE_PROP   = 'VEHICULAR_attribute';
 const VEHICLE_THRESH = [1, 2, 3, 4, 5, 6];     // cap at 6; Mapbox will hold color for >6
 const VEHICLE_STOPS  = makeStops(VEHICLE_THRESH); // uses your global COLORS
 const lanesColor     = rampExpr(VEHICLE_PROP, VEHICLE_STOPS);
 
 // -------- Categoreis --------
-// Median (binary like parking)
+// Median
 const medianColor = [
-  'match', ['to-number', ['get', 'median_value']],
-  0, '#9e9e9e',   // No
-  1, '#e91e63',   // Yes
+  'match', ['get', 'MEDIAN_attribute'],
+  'no', '#9e9e9e',   // No
+  'yes', '#e91e63',   // Yes
   '#9e9e9e'       // fallback
 ];
 
@@ -108,23 +108,23 @@ const bikeColor = [
 
 // Street Parking
 const parkingColor = [
-  'match', ['to-number', ['get','predicted_avail']],
-  0, '#9e9e9e', 1, '#e91e63', '#9e9e9e'
+  'match', ['get','STREET_PARKING_attribute'],
+  'no', '#9e9e9e', 'yes', '#e91e63', '#9e9e9e'
 ];
 
 // ---------- HOVER popup (elements) ----------
 const hoverPopup = new mapboxgl.Popup({ closeButton:false, closeOnClick:false });
 
 const HOVER_FIELD = {
-  composite:   { label:'Composite score',          prop:'composite_score',         fmt:v => (+v).toFixed(3) },
-  vehicle:     { label:'Number of lanes',          prop:'num_lanes',               fmt:v => String(v) },
-  bike:        { label:'Bike lane type',           prop:'BIKE_attribute',          fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
-  poi:         { label:'Amenity accessibility score',  prop:'AMENITIES_attribute', fmt:v => (+v).toFixed(2) },
-  parking:     { label:'Parking availability',     prop:'predicted_avail',         fmt:v => (Number(v)===1?'Yes (1)':'No (0)') },
-  median:     { label:'Median presence',           prop:'median_value',            fmt: v => (Number(v)===1 ? 'Yes (1)' : 'No (0)')},
-  transit:     { label:'Transit stop score',       prop:TRANSIT_PROP,              fmt:v => (+v).toFixed(1) },
-  sidewalk:    { label:'Sidewalk width (meter)',      prop:'SIDEWALK_attribute',   fmt:v => (v == null || isNaN(+v)) ? 'No sidewalk' : `${(+v).toFixed(1)}`},
-  streetbuffer:{ label:'Street buffer width (meter)', prop:'STREETBUFFER_attribute',   fmt:v => (v == null || isNaN(+v)) ? 'No street buffer' : `${(+v).toFixed(1)}`},
+  composite:   { label:'Composite score', prop:'composite_score', fmt:v => (+v).toFixed(3) },
+  vehicle:     { label:'Number of lanes', prop:'VEHICULAR_attribute', fmt:v => String(v) },
+  bike:        { label:'Bike lane type', prop:'BIKE_attribute', fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
+  poi:         { label:'Amenity accessibility score', prop:'AMENITIES_attribute', fmt:v => (+v).toFixed(2) },
+  parking:     { label:'Parking availability', prop:'STREET_PARKING_attribute', fmt: v => (v === 'yes' ? 'Yes' : v === 'no' ? 'No' : 'n/a')},
+  median:     { label:'Median presence', prop:'MEDIAN_attribute', fmt: v => (v === 'yes' ? 'Yes' : v === 'no' ? 'No' : 'n/a')},
+  transit:     { label:'Transit stop score', prop:TRANSIT_PROP, fmt:v => (+v).toFixed(1) },
+  sidewalk:    { label:'Sidewalk width (meter)', prop:'SIDEWALK_attribute', fmt:v => (v == null || isNaN(+v)) ? 'No sidewalk' : `${(+v).toFixed(1)}`},
+  streetbuffer:{ label:'Street buffer width (meter)', prop:'STREETBUFFER_attribute', fmt:v => (v == null || isNaN(+v)) ? 'No street buffer' : `${(+v).toFixed(1)}`},
 };
 
 // ---------- HOVER popup (composite score) ----------
@@ -442,10 +442,10 @@ const LAYER_DEFS = [
     key: 'vehicle',
     title: 'Vehicular road (num_lanes)',
     sourceId: 'vehilce_lane',
-    sourceUrl: 'mapbox://lsj8687.7i973wyp',
+    sourceUrl: 'mapbox://lsj8687.3juxs8eu',
     layerId: 'vehilce_lane-line',
     type: 'line',
-    sourceLayer: 'VEHICLELANE_top10_v2-blw431',
+    sourceLayer: 'VehicularRoad_ATTRIBUTE_v3-05uai0',
     paint: { 'line-color': lanesColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     legend: {
@@ -490,10 +490,10 @@ const LAYER_DEFS = [
     key: 'parking',
     title: 'Street parking (predicted_avail)',
     sourceId: 'street_parking',
-    sourceUrl: 'mapbox://lsj8687.atdhbq42',
+    sourceUrl: 'mapbox://lsj8687.27sv5btz',
     layerId: 'street_parking-line',
     type: 'line',
-    sourceLayer: 'STREETPARKING_20m_top10_v2-799bu4',
+    sourceLayer: 'StreetParking_ATTRIBUTE_v3-73h1h8',
     paint: { 'line-color': parkingColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     styleMods: { underScale: 1.8, overScale: 0.6 },
@@ -506,13 +506,13 @@ const LAYER_DEFS = [
     key: 'transit',
     title: `Transit (${TRANSIT_PROP})`,
     sourceId: 'transit_stop',
-    sourceUrl: 'mapbox://lsj8687.1z2p7ywa',
+    sourceUrl: 'mapbox://lsj8687.2t941imo',
     layerId: 'transit_stop-line',
     type: 'line',
-    sourceLayer: 'TRANSITSTOP_top10_v2-6aqb06',
+    sourceLayer: 'TransitStop_ATTRIBUTE_v3-axf122',
     paint: { 'line-color': transitColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
-    legend: { kind:'gradient', title:'Transit score', min:TRANSIT_THRESH[0], max:TRANSIT_THRESH.at(-1), stops:TRANSIT_STOPS, tickVals:[0, 10, 20, 30, 40], format:v=>(v===40?'40+':v.toFixed(0)) }
+    legend: { kind:'gradient', title:'Transit score', min:TRANSIT_THRESH[0], max:TRANSIT_THRESH.at(-1), stops:TRANSIT_STOPS, tickVals:[0, 10, 20, 30], format:v=>(v===30?'30+':v.toFixed(0)) }
   },
   {
     key: 'sidewalk',
@@ -556,10 +556,10 @@ const LAYER_DEFS = [
     key: 'median',
     title: 'Median (median_value)',
     sourceId: 'median',
-    sourceUrl: 'mapbox://lsj8687.d78ajg1k',              
+    sourceUrl: 'mapbox://lsj8687.17qp5l5z',              
     layerId: 'median-line',
     type: 'line',
-    sourceLayer: 'MEDIAN_top10_v2-c4r8f4',  
+    sourceLayer: 'Median_ATTRIBUTE_v3-7bz8uf',  
     paint: {
       'line-color': medianColor,
       'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2, 14, 6],

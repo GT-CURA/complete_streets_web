@@ -24,9 +24,12 @@
       <div class="wa-step wa-step-click" data-popup="collect-manuals">
         Collect municipal-level Complete Streets design manuals
       </div>
-      <div class="wa-step">Text pre-processing</div>
-      <div class="wa-step">Extract sentences containing the eight key street elements</div>
-    </div>
+      <div class="wa-step wa-step-click" data-popup="text-preprocess">
+        Text pre-processing
+      </div>
+      <div class="wa-step wa-step-click" data-popup="extract-sentences">
+        Extract sentences containing the eight key street elements
+      </div>
     <div class="wa-mini-table">
       <div class="wa-mini-table-header">Output</div>
       <div>Sentence sets for each element containing relevant text references</div>
@@ -66,8 +69,12 @@
   // --------- Card 2: Measure contribution score ----------
   const card2Body = `
     <div class="wa-steps">
-      <div class="wa-step">Use an LLM to filter sentences for evaluation suitability</div>
-      <div class="wa-step">Apply zero-shot classification to score each sentence's contribution to five CS benefits</div>
+      <div class="wa-step wa-step-click" data-popup="llm-filter">
+        Use an LLM to filter sentences for evaluation suitability
+      </div>
+      <div class="wa-step wa-step-click" data-popup="zero-shot-scores">
+        Apply zero-shot classification to score each sentence's contribution to five CS benefits
+      </div>
     </div>
     <div class="wa-mini-table">
       <div class="wa-mini-table-header">Output</div>
@@ -138,9 +145,9 @@
   // --------- Card 3: Calculate element weights ----------
   const card3Body = `
     <div class="wa-steps">
-        <div class="wa-step">
+      <div class="wa-step">
         Aggregate contribution scores across all sentences for each element
-        </div>
+      </div>
     </div>
 
     <!-- Example outputs between Step 1 and Step 2 of this card -->
@@ -148,7 +155,7 @@
       <!-- 1) Sum of scores by element and benefit -->
       <div class="wa-example-block">
         <div class="wa-example-caption">Sum of scores by element and benefit</div>
-        <table class="wa-example-table wa-example-table-wide">
+        <table class="wa-example-table wa-example-table-wide wa-example-table-sum">
           <thead>
             <tr>
               <th>Element</th>
@@ -189,28 +196,54 @@
       <!-- 2) Number of valid sentences per element (stacked below) -->
       <div class="wa-example-block">
         <div class="wa-example-caption">Number of valid sentences per element</div>
-        <table class="wa-example-table wa-example-table-n">
+        <table class="wa-example-table wa-example-table-wide wa-example-table-n">
           <thead>
             <tr>
               <th>Element</th>
-              <th>N</th>
+              <th>B₁</th>
+              <th>B₂</th>
+              <th>B₃</th>
+              <th>B₄</th>
+              <th>B₅</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Sidewalk</td>      <td>566</td></tr>
-            <tr><td>Street buffer</td>           <td>310</td></tr>
-            <tr><td colspan="2" style="text-align:center;">⋮</td></tr>
+            <tr>
+              <td>Sidewalk</td>
+              <td>232</td>
+              <td>9</td>
+              <td>32</td>
+              <td>111</td>
+              <td>302</td>
+              <td>686</td>
+            </tr>
+            <tr>
+              <td>Street buffer</td>
+              <td>47</td>
+              <td>1</td>
+              <td>64</td>
+              <td>26</td>
+              <td>211</td>
+              <td>349</td>
+            </tr>
+            <tr>
+              <td colspan="7" style="text-align:center;">⋮</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <div class="wa-steps">
-      <div class="wa-step">
-        Compute element weights (full marks) by combining total contribution and balance across benefits
+      <div class="wa-step wa-step-click" data-popup="compute-weights">
+        Compute element weights (full marks) by combining 
+        <span class="wa-text-blue">total contribution</span> and 
+        <span class="wa-text-red">balance across benefits</span>
       </div>
     </div>
   `;
+
 
   const card3 = card({
     kicker: 'Step 3',
@@ -293,11 +326,31 @@
   const POPUP_CONTENT = {
     'collect-manuals': {
       title: 'Collect municipal-level CS design manuals',
-      body: `We compile Complete Streets design manuals from multiple U.S. cities.
-             These documents provide the policy and design language that we later
-             analyze to infer how each street element supports the five benefits.`
+      body: `We collect 73 Complete Streets design guidebooks and plans from multiple municipalities in North America. These include 58 cities, 4 counties, 5 regions, and 6 states.`,
+      img: 'assets/5_weight_assignment/collect-manuals.png'
     },
-    // add more keys here for other steps if desired
+    'text-preprocess': {
+      title: 'Text pre-processing',
+      body: `Each city has its own design template, so we clean and standardize the manuals (e.g., remove boilerplate text, normalize headings, split into sentences) to ensure that all sentences are evaluated consistently across documents.`
+    },
+    'extract-sentences': {
+      title: 'Extract sentences for the eight key street elements',
+      body: `We extract sentences that explicitly mention sidewalks, buffers, bike lanes, transit stops, medians, vehicular lanes, street parking, and amenities. Synonymous terms for each element are also included; for example, <i>bike path</i> is treated as equivalent to <i>bike lane</i>.`
+    },
+    'llm-filter': {
+      title: 'Filter sentences with an LLM',
+      body: `Not every sentence that contains a keyword actually defines, recommends, or evaluates a design element. We use a large language model to filter out sentences that are off-topic or purely descriptive, keeping only those suitable for contribution scoring.`
+    },
+    'zero-shot-scores': {
+      title: 'Assess how strongly the sentence identifies benefits with a NLI',
+      body: `For each remaining sentence, we apply zero-shot classification (i.e., zero-shot learning for natural language inference) to estimate how strongly it supports each of the five Complete Streets benefits: <em>community</em>, <em>economy</em>, <em>environment</em>, <em>health</em>, and <em>safety</em>, as described in <a href="https://www.smartgrowthamerica.org/knowledge-hub/resources/best-complete-streets-policies-2025-pdf/" target="_blank" style="color:#6ec9ff; text-decoration:none;">Best Complete Streets Policies</a> by the <i><a href="https://www.smartgrowthamerica.org/programs-and-coalitions/national-complete-streets-coalition/" target="_blank" style="color:#6ec9ff; text-decoration:none;">National Complete Streets Coalition</a></i>. The model produces sigmoid scores ranging from 0 to 1 for each benefit, indicating the degree of semantic alignment between a sentence and each benefit description.`,
+      img: 'assets/5_weight_assignment/zero-shot-scores.png'
+    },
+    'compute-weights': {
+      title: 'Compute element weights (full marks)',
+      body: `To determine the final weight for each element, we consider not only the total sum of contribution scores across benefits but also the number of valid sentences associated with each element. This approach recognizes that both the <strong>overall magnitude of contribution</strong> and the <strong>balance of support across the five benefits</strong> are important. The resulting values are then normalized so that the full marks across all elements sum to 100, producing the final element weights used in the <em>Composite Completeness Score</em>.`,
+      img: 'assets/5_weight_assignment/compute-weights.png'
+    }
   };
 
   function setupWaPopup(){
@@ -312,7 +365,20 @@
       const info = POPUP_CONTENT[id];
       if (!info) return;
       titleEl.textContent = info.title;
-      bodyEl.textContent  = info.body;
+      bodyEl.innerHTML    = info.body;
+
+      const oldImg = overlay.querySelector('.wa-popup-img');
+      if (oldImg) oldImg.remove();
+
+      // Add image if defined for this popup
+      if (info.img) {
+        const img = document.createElement('img');
+        img.src = info.img;
+        img.alt = info.title;
+        img.className = 'wa-popup-img';
+        bodyEl.insertAdjacentElement('afterend', img);
+      }
+
       overlay.classList.add('is-visible');
       document.body.classList.add('wa-no-scroll');
     }
