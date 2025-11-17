@@ -35,7 +35,8 @@ const rampExpr = (prop, stops) => {
 };
 
 // Shared color palette for all ramps
-const COLORS = ["#FF1744","#FF6D00","#FFD600","#1DE9B6","#00E5FF","#2979FF"];
+const COLORS_COMPOSITE = ["#FF1744","#FF6D00","#FFD600","#1DE9B6","#00E5FF","#2979FF"];
+const COLORS = ["#caf0f8","#90e0ef","#00b4d8","#0077b6","#023e8a","#03045e"];
 
 
 function makeStops(thresholds, colors = COLORS){
@@ -54,7 +55,7 @@ function firstTextLabelLayerId() {
 // -------- Continuous Ramps (per element) --------
 // Composite final_score
 const FINAL_THRESH = [0, 20, 40, 60, 80, 100];
-const FINAL_STOPS  = makeStops(FINAL_THRESH);
+const FINAL_STOPS  = makeStops(FINAL_THRESH, COLORS_COMPOSITE);
 const finalColor   = rampExpr('composite_score', FINAL_STOPS);
 
 // POI
@@ -95,21 +96,21 @@ const lanesColor     = rampExpr(VEHICLE_PROP, VEHICLE_STOPS);
 const medianColor = [
   'match', ['get', 'MEDIAN_attribute'],
   'no', '#9e9e9e',   // No
-  'yes', '#e91e63',   // Yes
+  'yes', '#0077b6',   // Yes
   '#9e9e9e'       // fallback
 ];
 
 // Bike lane
 const bikeColor = [
   'match', ['to-number', ['get','BIKE_attribute']],
-  0, '#9e9e9e', 1, '#00c2ff', 2, '#1b7eda', // 1 Designated // 2 Protected
+  0, '#9e9e9e', 1, '#90e0ef', 2, '#0077b6', // 1 Designated // 2 Protected
   '#9e9e9e'
 ];
 
 // Street Parking
 const parkingColor = [
   'match', ['get','STREET_PARKING_attribute'],
-  'no', '#9e9e9e', 'yes', '#e91e63', '#9e9e9e'
+  'no', '#9e9e9e', 'yes', '#0077b6', '#9e9e9e'
 ];
 
 // ---------- HOVER popup (elements) ----------
@@ -470,8 +471,8 @@ const LAYER_DEFS = [
     visibleByDefault: false,
     legend: { kind:'cats', title:'Lane type', width: 180, cats:[
       {label:'Not existed', color:'#9e9e9e'},
-      {label:'Designated', color:'#00c2ff'},
-      {label:'Protected',  color:'#1b7eda'}
+      {label:'Designated', color:'#90e0ef'},
+      {label:'Protected',  color:'#0077b6'}
     ]}
   },
   {
@@ -499,7 +500,7 @@ const LAYER_DEFS = [
     styleMods: { underScale: 1.8, overScale: 0.6 },
     legend: { kind:'cats', title:'Parking availability', width: 150, cats:[
       {label:'No',  color:'#9e9e9e'},
-      {label:'Yes', color:'#e91e63'}
+      {label:'Yes', color:'#0077b6'}
     ]}
   },
   {
@@ -570,7 +571,7 @@ const LAYER_DEFS = [
       kind: 'cats', title: 'Median', width: 150,
       cats: [
         {label: 'No', color: '#9e9e9e'},
-        {label: 'Yes', color: '#e91e63'}
+        {label: 'Yes', color: '#0077b6'}
       ]
     }
   },
@@ -594,7 +595,7 @@ const LAYER_DEFS = [
       min: STREETBUFFER_THRESH[0], max: STREETBUFFER_THRESH.at(-1),
       stops: STREETBUFFER_STOPS,
       tickVals: [0, 1, 2, 3, 4, 5], format:v=> (v===5?'5+':v.toFixed(0)),
-      extraCats: [ {label:'No buffer (NA)', color:'#9e9e9e'} ]
+      extraCats: [ {label:'No buffer', color:'#9e9e9e'} ]
     }
   }
 ];

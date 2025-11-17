@@ -250,7 +250,7 @@ const DC_CONTENT = {
       <div style="margin-top:8px;">
         Find out how we trained the model <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5599538" target="_blank" style="color:#03A9F4; text-decoration:underline;">here</a>.
       </div>`,
-    output: `Three categories: No bike lane, Designated, or Protected`,
+    output: `No bike lane, designated, or protected`,
     link: "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/bike_lane"
   },
   "amenities": {
@@ -315,9 +315,19 @@ const DC_CONTENT = {
   "parking": {
     title: "Street parking",
     pill:  "Street parking",
-    data:  `• GSV`,
-    how:   `2 Approches.`,
-    output:`Parking presence, side, and restriction class`,
+    data: `
+      <ol style="margin:0; padding-left:6px;">
+        <li>For each side of the road, six Google Street View images at approximately 10-meter intervals</li>
+        </li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Detect parking signs using a fine-tuned YOLO object detection model</li>
+        <li>Detect vehicles and classify them as stationary or moving using YOLO instance segmentation combined with geometric projection</li>
+        <li>Use trigonometric functions to calculate street buffer width</li>
+        <li>Merge sign and vehicle detections to classify each road segment as <em>Parking</em> or <em>No Parking</em></li>
+      </ol>`,
+    output: `Street parking presence`,
     link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/street_parking"
   }
 };

@@ -339,7 +339,8 @@
     },
     'llm-filter': {
       title: 'Filter sentences with an LLM',
-      body: `Not every sentence that contains a keyword actually defines, recommends, or evaluates a design element. We use a large language model to filter out sentences that are off-topic or purely descriptive, keeping only those suitable for contribution scoring.`
+      body: `Not every sentence that mentions a street element is relevant for assessing how that element is valued or recommended in design manuals. To retain only those sentences appropriate for contribution scoring, we use a large language model (LLM) to filter out content that is purely descriptive or unrelated. Two prompt-engineering strategies—one for tone classification and another for syntactic evaluation—are applied sequentially.`,
+      img: 'assets/5_weight_assignment/llm-filter.png'
     },
     'zero-shot-scores': {
       title: 'Assess how strongly the sentence identifies benefits with a NLI',
