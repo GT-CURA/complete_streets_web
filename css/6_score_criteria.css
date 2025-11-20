@@ -94,7 +94,9 @@
 }
 
 .sc-table {
-  color: #3b3423; /* dark brownish, matches your other sections */
+  color: #3b3423;
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 /* Adjust table layout for 6 columns */
@@ -119,7 +121,8 @@
 .sc-table td:nth-child(4),
 .sc-table th:nth-child(4) {
   color: #3a528b;
-  font-style: italic;
+  font-style: normal;
+  font-weight: 600;
 }
 
 .sc-table th,
@@ -131,20 +134,114 @@
 
 .sc-table td:nth-child(4) {
   text-align: left;
-  color: #4a4332;
+  color: #3a528b;
+  font-weight: 600;
+  padding-left: 25px !important;
 }
 
 .sc-table td:nth-child(5),
 .sc-table th:nth-child(5) {
   font-weight: 600;
   color: #1e2a57;
+  text-align: center !important;
 }
 
 /* Footnote styling */
 .sc-footnote {
   max-width: 90vw;
   margin: 12px auto 0;
-  font: 400 12px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+  font: 400 14px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
   color: #6b634f;
   text-align: left;
+}
+
+.rule-note {
+  font-weight: 400 !important;   
+  opacity: 0.9;                  
+}
+
+.sc-click {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sc-click:hover {
+  background: #fff4d0; /* same hover tint as section 5 */
+}
+
+/* Increase indent for lists inside Score Criteria popup */
+#sc-popup-overlay .wa-popup-body ul {
+  padding-left: 16px;
+  margin-left: 0;
+}
+
+#sc-popup-overlay .wa-popup-body li {
+  margin-bottom: 0px;
+}
+
+.sc-svg-wrap img {
+  display: block;
+  margin: 0 auto;
+}
+
+.equation {
+  color: #e1dcc8;
+  font-family: "CMU Serif", "Computer Modern", serif;
+  font-size: 1.1em;
+}
+
+.sc-subtable-wrap {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  overflow-x: auto;
+}
+
+.sc-subtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border-top: 1.5px solid #d0d0d0;
+  border-bottom: 1.5px solid #d0d0d0;
+}
+
+.sc-subtable thead {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.sc-subtable thead th {
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1.5px solid #c8c8c8;  /* horizontal line below header */
+}
+
+.sc-subtable th,
+.sc-subtable td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: left;
+  vertical-align: top;
+}
+
+.sc-subtable th:first-child,
+.sc-subtable td:first-child {
+  white-space: nowrap;
+}
+
+.sc-subtable td:nth-child(3),
+.sc-subtable td:nth-child(4),
+.sc-subtable td:nth-child(5),
+.sc-subtable th:nth-child(3),
+.sc-subtable th:nth-child(4),
+.sc-subtable th:nth-child(5) {
+  text-align: center;
+}
+
+.popup-link {
+  color: #6ec9ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.popup-link:hover {
+  text-decoration: underline;
 }

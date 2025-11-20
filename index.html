@@ -19,6 +19,7 @@
   <script src="fs/3_map.js" defer></script>
   <script src="fs/4_data_collection.js" defer></script>
   <script src="fs/5_weight_full.js" defer></script>
+  <script src="fs/6_score_criteria.js" defer></script>
   <script src="fs/7_about.js" defer></script>
 
   <!-- Styles -->
@@ -26,9 +27,11 @@
   <link rel="stylesheet" href="css/3_map.css">
   <link rel="stylesheet" href="css/4_data_collection.css">
   <link rel="stylesheet" href="css/5_weight_full.css">
-  <link rel="stylesheet" href="css/6_score_criteria.css">
   <link rel="stylesheet" href="css/7_about.css">
+  <link rel="stylesheet" href="css/6_score_criteria.css">
   <link rel="stylesheet" href="css/0_side_menu.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/computer-modern-web-font@1.0.0/css/cmu-serif.css">
 </head>
 
 
@@ -45,7 +48,7 @@
     <!-- (1) Cover -->
     <section id="overview" class="cover">
       <video autoplay muted loop playsinline preload="auto">
-        <source src="assets/IntroVideo.mp4" type="video/mp4">
+        <source src="assets/1_cover.mp4" type="video/mp4">
       </video>
       <div class="content">
         <h1>
@@ -226,97 +229,21 @@
       </div>
 
       <div class="rf-heading">
-        <div class="rf-text reveal" id="sc-text">
-          Each attribute value is converted to its corresponding score range of <strong>0&nbsp;–&nbsp;(full mark)</strong>, proportionally based on its observed range and capped at the full mark. These ranges were defined using a hybrid approach that combines empirical data from five benchmark US cities with design thresholds drawn from municipal and federal street design manuals. The table below summarizes the scoring criteria for all eight elements used in the composite score.
-        </div>
+        <div class="rf-text reveal" id="sc-text"></div>
       </div>
 
       <figure class="sc-figure reveal">
-        <div class="sc-table-wrap">
-
-          <table class="sc-table">
-            <thead>
-              <tr>
-                <th>Element</th>
-                <th>Presence</th>
-                <th>Attributes</th>
-                <th>Score Range</th>
-                <th>Full Mark</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Sidewalk</td>
-                <td>Both sides</td>
-                <td>Width</td>
-                <td>Wider sidewalk → higher score (up to 5 m = full mark)</td>
-                <td>21.9</td>
-              </tr>
-              <tr>
-                <td>Street buffer</td>
-                <td>Both sides</td>
-                <td>Width</td>
-                <td>Wider buffer → higher score (up to 2.5 m = full mark)</td>
-                <td>18.8</td>
-              </tr>
-              <tr>
-                <td>Bike lane</td>
-                <td>Centerline</td>
-                <td>Type</td>
-                <td>Protected &gt; Designated &gt; None</td>
-                <td>16.4</td>
-              </tr>
-              <tr>
-                <td>Transit stop</td>
-                <td>Within a walkshed</td>
-                <td>Accessibility Score</td>
-                <td>Higher accessibility → higher score (capped at full mark)</td>
-                <td>12.6</td>
-              </tr>
-              <tr>
-                <td>Median</td>
-                <td>Centerline</td>
-                <td>NA (binary)</td>
-                <td>Existing = full mark; None = 0</td>
-                <td>9.3</td>
-              </tr>
-              <tr>
-                <td>POI (amenities)</td>
-                <td>Within a walkshed</td>
-                <td>Accessibility Score</td>
-                <td>Higher accessibility → higher score (capped at full mark)</td>
-                <td>9.2</td>
-              </tr>
-              <tr>
-                <td>Street parking</td>
-                <td>Both sides</td>
-                <td>NA (binary)</td>
-                <td>Existing = half mark per side; None = 0</td>
-                <td>9.2</td>
-              </tr>
-              <tr>
-                <td>Vehicular road</td>
-                <td>Centerline</td>
-                <td># of lanes</td>
-                <td>Closer to standard (4 or 3 lanes) → higher score</td>
-                <td>2.6</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <p class="sc-footnote">
-            * For elements present on both sides (e.g., sidewalks, buffers, parking), scores are calculated separately per side and then summed.<br>
-            ** “Standard” lane count = 4 for trunk/primary/secondary roads, 3 for tertiary roads.
-          </p>
-
-        
-        </div>
+        <div class="sc-table-wrap" id="sc-table-wrap"></div>
       </figure>
     </section>
 
-
-
-
+    <div id="sc-popup-overlay" class="wa-popup-overlay" aria-hidden="true">
+      <div class="wa-popup" role="dialog" aria-modal="true">
+        <button class="wa-popup-close" aria-label="Close">×</button>
+        <h3 class="wa-popup-title"></h3>
+        <p class="wa-popup-body"></p>
+      </div>
+    </div>
 
     <!-- ================= SECTION 7: ABOUT ================= -->    
     <section id="about" class="about">
@@ -382,7 +309,11 @@
           <!-- Logos row -->
           <div class="about-logos">
               <a href="https://resilience.research.gatech.edu/" target="_blank" rel="noopener noreferrer">
-              <img src="assets/7_about/CURA logo.png" alt="Center for Urban Research Analytics (CURA)">
+                <img src="assets/7_about/CURA logo.png" alt="Center for Urban Research Analytics (CURA)" class="logo-cura">
+              </a>
+
+              <a href="https://planning.gatech.edu/" target="_blank" rel="noopener noreferrer">
+                <img src="assets/7_about/SCARP logo.png" alt="School of City and Regional Planning" class="logo-second">
               </a>
           </div>
         </div>

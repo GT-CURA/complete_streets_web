@@ -274,25 +274,49 @@ const DC_CONTENT = {
   "transit-stop": {
     title: "Transit stop",
     pill:  "Transit stop",
-    data:  `• GTFS <br> • GSVs`,
-    how:   ``,
-    output:`Stop presence, shelter flag, and service frequency bucket.`,
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>GTFS files</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Load and merge GTFS feeds</li>
+        <li>Calculate stop significance using route diversity, connectivity, service frequency, and amenity quality</li>
+        <li>Calculate the street-level transit accessibility score by combining stop significance scores</li>
+      </ol>`,
+    output: `Street-level transit accessibility metrics`,
     link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/transit_stop"
   },
   "median": {
     title: "Median",
     pill:  "Median",
-    data:  `• GDOT`,
-    how:   `-`,
-    output:`Median presence`,
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>A GeoJSON file containing road LineString geometries</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Retrieve nearby road geometries using OSMnx</li>
+        <li>For single-carriageway roads, assign <em>no</em> to indicate the absence of a physical median</li>
+        <li>For dual-carriageway roads, assign <em>yes</em> to indicate the presence of a physical median separating two parallel, opposite-direction segments</li>
+      </ol>`,
+    output: `A label indicating whether a road segment contains a median`,
     link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/median"
   },
   "vehicular": {
     title: "Vehicular road",
     pill:  "Vehicular road",
-    data:  `• GDOT`,
-    how:   `-`,
-    output:`Lane count`,
+    data: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>A GeoJSON file containing road LineString geometries</li>
+      </ol>`,
+    how: `
+      <ol style="margin:0; padding-left:18px;">
+        <li>Retrieve nearby road geometries using OSMnx.</li>
+        <li>For single-carriageway roads, determine the number of lanes based on the narrowest portion of the segment</li>
+        <li>For dual-carriageway roads, determine the lane count for each direction at the narrowest portion and sum them to obtain the total number of vehicular lanes</li>
+      </ol>`,
+    output: `The total number of vehicular lanes assigned to each road segment`,
     link:  "https://github.com/GT-CURA/complete_streets/tree/main/step2_elements/vehicular_road"
   },
   "street-buffer": {
@@ -316,9 +340,8 @@ const DC_CONTENT = {
     title: "Street parking",
     pill:  "Street parking",
     data: `
-      <ol style="margin:0; padding-left:6px;">
+      <ol style="margin:0; padding-left:18px;">
         <li>For each side of the road, six Google Street View images at approximately 10-meter intervals</li>
-        </li>
       </ol>`,
     how: `
       <ol style="margin:0; padding-left:18px;">

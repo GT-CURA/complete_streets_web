@@ -331,7 +331,8 @@
     },
     'text-preprocess': {
       title: 'Text pre-processing',
-      body: `Each city has its own design template, so we clean and standardize the manuals (e.g., remove boilerplate text, normalize headings, split into sentences) to ensure that all sentences are evaluated consistently across documents.`
+      body: `Each city has its own design template, so we clean and standardize the manuals (e.g., remove boilerplate text, normalize headings, split into sentences) to ensure that all sentences are evaluated consistently across documents.`,
+      img: 'assets/5_weight_assignment/text-preprocess.png'
     },
     'extract-sentences': {
       title: 'Extract sentences for the eight key street elements',
