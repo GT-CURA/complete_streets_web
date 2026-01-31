@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Intro text -------------------------------------------------
   const intro = `
-    Each attribute value is converted to its corresponding score range of <strong>0&nbsp;–&nbsp;(full mark)</strong>, proportionally based on its observed range and capped at the full mark. These ranges were defined using a hybrid approach that combines empirical data from five benchmark US cities with design thresholds drawn from municipal and federal street design manuals. The table below summarizes the scoring criteria for all eight elements used in the composite score.
+    Each attribute value is converted to its corresponding score range of <strong>0&nbsp;–&nbsp;(full marks)</strong>, proportionally based on its observed range and capped at the full marks. These ranges were defined using a hybrid approach that combines empirical data from five benchmark US cities with design thresholds drawn from municipal and federal street design manuals. The table below summarizes the scoring criteria for all eight elements used in the composite score.
   `;
   textEl.innerHTML = intro.trim();
 
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Wider sidewalk → higher score <span class="rule-note">(> 5 meters: 10.45 for each side)</span>`,
       fullMark: "21.9",
       popup: `
-        For each side of the street, we calculate a score based on sidewalk width. The score increases as sidewalks get wider, up to a threshold of 5 meters (widths above 5 meters always receive the full mark). Scores from both sides are then summed.
+        For each side of the street, we calculate a score based on sidewalk width. The score increases as sidewalks get wider, up to a threshold of 5 meters (widths above 5 meters always receive the full marks). Scores from both sides are then summed.
         <br>
         <ul>
           <li><span class="equation">Score per side = (width / 5 m) × 10.45</span>, capped at 10.45</li>
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Wider buffer → higher score <span class="rule-note">(> 2.5 meters: 9.4 for each side)</span>`,
       fullMark: "18.8",
       popup: `
-        For each side of the street, we calculate a score based on street buffer width. The score increases as buffer get wider, up to a threshold of 2.5 meters (widths above 2.5 meters always receive the full mark). Scores from both sides are then summed.
+        For each side of the street, we calculate a score based on street buffer width. The score increases as buffer get wider, up to a threshold of 2.5 meters (widths above 2.5 meters always receive the full marks). Scores from both sides are then summed.
         <br>
         <ul>
           <li><span class="equation">Score per side = (width / 2.5 m) × 9.4</span>, capped at 9.4</li>
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Higher accessibility → higher score <span class="rule-note">(> 22 accessibility score: 12.6)</span>`,
       fullMark: "12.6",
       popup: `
-        For each street, we calculate a score based on its accessibility to nearby transit stops. The score increases as accessibility improves, up to a threshold of 22 (values above 22 always receive the full mark).
+        For each street, we calculate a score based on its accessibility to nearby transit stops. The score increases as accessibility improves, up to a threshold of 22 (values above 22 always receive the full marks).
         <br>
         <ul>
           <li><span class="equation">Score = (accessibility score / 22) × 12.6</span>, capped at 12.6</li>
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Existing <span class="rule-note">(9.3)</span>; None <span class="rule-note">(0)</span>`,
       fullMark: "9.3",
       popup: `
-        Since this element does not have an attribute-based scale, its score is assigned as a simple binary indicator. If a street segment is identified as having a median, it receives the full mark (9.3); otherwise, it receives 0.
+        Since this element does not have an attribute-based scale, its score is assigned as a simple binary indicator. If a street segment is identified as having a median, it receives the full marks (9.3); otherwise, it receives 0.
       `
     },
     {
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Higher accessibility → higher score <span class="rule-note">(> 2.5 accessibility score: 9.2)</span>`,
       fullMark: "9.2",
       popup: `
-        For each street, we calculate a score based on its accessibility to nearby amenities. The score increases as accessibility improves, up to a threshold of 2.5 (values above 2.5 always receive the full mark).
+        For each street, we calculate a score based on its accessibility to nearby amenities. The score increases as accessibility improves, up to a threshold of 2.5 (values above 2.5 always receive the full marks).
         <br>
         <ul>
           <li><span class="equation">Score = (accessibility score / 2.5) × 9.2</span>, capped at 9.2</li>
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Existing <span class="rule-note">(4.6 for each side)</span>; None <span class="rule-note">(0)</span>`,
       fullMark: "9.2",
       popup: `
-        Since this element does not have an attribute-based scale, its score is assigned as a simple binary indicator. For each side of the street, if parking is present, that side receives half of the full mark (4.6); otherwise, it receives 0. Scores from both sides are then summed.
+        Since this element does not have an attribute-based scale, its score is assigned as a simple binary indicator. For each side of the street, if parking is present, that side receives half of the full marks (4.6); otherwise, it receives 0. Scores from both sides are then summed.
       `
     },
     {
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Closer to standard<sup class="footnote-mark">**</sup> → higher score`,
       fullMark: "2.6",
       popup: `
-        For each street, we assign a score based on how closely its number of vehicular lanes matches the reference value for its corresponding road type. Segments that align with the reference receive the full mark, while segments that deviate receive proportionally lower scores.
+        For each street, we assign a score based on how closely its number of vehicular lanes matches the reference value for its corresponding road type. Segments that align with the reference receive the full marks, while segments that deviate receive proportionally lower scores.
         <br>
         <ul>
           <li><span class="equation">Score = 2.6 - (0.8 × | number of lanes - reference value |)</span>; if the absolute difference is 3 or more, the score is set to 0</li>
@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <th>Presence</th>
       <th>Attributes</th>
       <th>Score Range</th>
-      <th>Full Mark</th>
+      <th>Full Marks</th>
     </tr>
   `;
   table.appendChild(thead);
