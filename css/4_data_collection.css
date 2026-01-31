@@ -157,7 +157,7 @@
 }
 
 .dc-sidepanel.is-empty h3::before{
-  content: "Click an element to explore details";
+  content: "Click a street element on the left image to explore details";
   display: block;
   font: 600 14px/1.3 system-ui, sans-serif;
   color: #a7a7a7;
