@@ -117,7 +117,7 @@ const parkingColor = [
 const hoverPopup = new mapboxgl.Popup({ closeButton:false, closeOnClick:false });
 
 const HOVER_FIELD = {
-  composite:   { label:'Composite score', prop:'composite_score', fmt:v => (+v).toFixed(3) },
+  composite:   { label:'Composite score', prop:'composite_score', fmt:v => (+v).toFixed(1) },
   vehicle:     { label:'Number of lanes', prop:'VEHICULAR_attribute', fmt:v => String(v) },
   bike:        { label:'Bike lane type', prop:'BIKE_attribute', fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
   poi:         { label:'Amenity accessibility score', prop:'AMENITIES_attribute', fmt:v => (+v).toFixed(2) },
@@ -131,14 +131,14 @@ const HOVER_FIELD = {
 // ---------- HOVER popup (composite score) ----------
 // Currently... all normalized to max 0.125
 const SCORE_ITEMS = [
-  { label: 'Sidewalk',        prop: 'SIDEWALK_score',        max: 21.9 },
-  { label: 'Street buffer',   prop: 'STREET_BUFFER_score',   max: 18.8 },
-  { label: 'Bike lane',       prop: 'BIKE_score',            max: 16.4 },
-  { label: 'Transit stop',    prop: 'TRANSIT_STOP_score',    max: 12.6 },
-  { label: 'Median',          prop: 'MEDIAN_score',          max: 9.3  },
-  { label: 'POI (amenities)', prop: 'AMENITIES_score',       max: 9.2  },
-  { label: 'Street parking',  prop: 'STREET_PARKING_score',  max: 9.2  },
-  { label: 'Vehicular road',  prop: 'VEHICULAR_score',       max: 2.6  }
+  { label: 'Sidewalk',        prop: 'SIDEWALK_score',        max: 22.6 },
+  { label: 'Street buffer',   prop: 'STREET_BUFFER_score',   max: 20.3 },
+  { label: 'Bike lane',       prop: 'BIKE_score',            max: 17.2 },
+  { label: 'Transit stop',    prop: 'TRANSIT_STOP_score',    max: 13.2 },
+  { label: 'Amenities',       prop: 'AMENITIES_score',       max: 10.1 },
+  { label: 'Median',          prop: 'MEDIAN_score',          max: 8.2  },
+  { label: 'Street parking',  prop: 'STREET_PARKING_score',  max: 7.6  },
+  { label: 'Vehicular road',  prop: 'VEHICULAR_score',       max: 0.8  }
 ];
 
 const GLOBAL_FULL_MAX = Math.max(...SCORE_ITEMS.map(s => s.max));
@@ -431,10 +431,10 @@ const LAYER_DEFS = [
     key: 'composite',
     title: 'Composite final_score',
     sourceId: 'composite_score',
-    sourceUrl: 'mapbox://lsj8687.5eyickps', // V3
+    sourceUrl: 'mapbox://lsj8687.130ty6zd', // V4
     layerId: 'composite_score-line',
     type: 'line',
-    sourceLayer: 'Composite_score_v3_vis_panoim-6as8b3', // V3
+    sourceLayer: 'Composite_score_v4_vis-6xg0uo', // V4
     paint: { 'line-color': finalColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: true,
     legend: { kind:'gradient', title:'Completeness Score', min: FINAL_THRESH[0], max: FINAL_THRESH.at(-1), stops: FINAL_STOPS, format: v => v.toFixed(0), width: 380, bottom: 60 }
