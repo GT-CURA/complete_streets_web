@@ -146,7 +146,7 @@
   const card3Body = `
     <div class="wa-steps">
       <div class="wa-step">
-        Aggregate contribution scores across all sentences for each element
+        Aggregate contribution scores (> 0.5) across all sentences for each element
       </div>
     </div>
 
@@ -255,14 +255,14 @@
   // --------- Card 4: Full-mark bars ----------
   // Same max values you use in the composite popup bars
   const SCORE_ITEMS = [
-    { label: 'Sidewalk',        max: 21.9 },
-    { label: 'Street buffer',   max: 18.8 },
-    { label: 'Bike lane',       max: 16.4 },
-    { label: 'Transit stop',    max: 12.6 },
-    { label: 'Median',          max: 9.3  },
-    { label: 'POI (amenities)', max: 9.2  },
-    { label: 'Street parking',  max: 9.2  },
-    { label: 'Vehicular road',  max: 2.6  }
+    { label: 'Sidewalk',        max: 22.6 },
+    { label: 'Street buffer',   max: 20.3 },
+    { label: 'Bike lane',       max: 17.2 },
+    { label: 'Transit stop',    max: 13.2 },
+    { label: 'Amenities', max: 10.1  },
+    { label: 'Median',          max: 8.2  },
+    { label: 'Street parking',  max: 7.6  },
+    { label: 'Vehicular road',  max: 0.8  }
   ];
 
   const GLOBAL_FULL_MAX = Math.max(...SCORE_ITEMS.map(s => s.max));
