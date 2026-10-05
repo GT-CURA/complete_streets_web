@@ -347,7 +347,6 @@ const DC_CONTENT = {
       <ol style="margin:0; padding-left:18px;">
         <li>Detect parking signs using a fine-tuned YOLO object detection model</li>
         <li>Detect vehicles and classify them as stationary or moving using YOLO instance segmentation combined with geometric projection</li>
-        <li>Use trigonometric functions to calculate street buffer width</li>
         <li>Merge sign and vehicle detections to classify each road segment as <em>Parking</em> or <em>No Parking</em></li>
       </ol>`,
     output: `Street parking presence`,

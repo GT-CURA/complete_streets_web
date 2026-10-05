@@ -344,7 +344,7 @@
       img: 'assets/5_weight_assignment/llm-filter.png'
     },
     'zero-shot-scores': {
-      title: 'Assess how strongly the sentence identifies benefits with a NLI',
+      title: 'Assess how strongly the sentence identifies benefits with an NLI',
       body: `For each remaining sentence, we apply zero-shot classification (i.e., zero-shot learning for natural language inference) to estimate how strongly it supports each of the five Complete Streets benefits: <em>community</em>, <em>economy</em>, <em>environment</em>, <em>health</em>, and <em>safety</em>, as described in <a href="https://www.smartgrowthamerica.org/knowledge-hub/resources/best-complete-streets-policies-2025-pdf/" target="_blank" style="color:#6ec9ff; text-decoration:none;">Best Complete Streets Policies</a> by the <i><a href="https://www.smartgrowthamerica.org/programs-and-coalitions/national-complete-streets-coalition/" target="_blank" style="color:#6ec9ff; text-decoration:none;">National Complete Streets Coalition</a></i>. The model produces sigmoid scores ranging from 0 to 1 for each benefit, indicating the degree of semantic alignment between a sentence and each benefit description.`,
       img: 'assets/5_weight_assignment/zero-shot-scores.png'
     },

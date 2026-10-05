@@ -77,8 +77,9 @@
   line-height: 1.45;
 }
 
-/* Title links */
-.about-block--pub .pub-list a {
+/* Title links (and unlinked titles for papers under review) */
+.about-block--pub .pub-list a,
+.about-block--pub .pub-list .pub-title {
   font-weight: 600;
   color: #e0e0e0;
   text-decoration: none;

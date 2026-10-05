@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <li>Two sufficiently wide sidewalks can earn up to 22.6 in total</li>
         </ul>
         <br>
-        To determine this threshold, we collected ground-truth sidewalk widths from both sides of street segment midpoints across five highly walkable U.S. cities. We then aggregated these measurements and set the 95th percentile value as the maximum threshold. The figure below shows the resulting distribution of sideawlk widths across the five cities (N = 150,395 road segments with a sidewalk present).
+        To determine this threshold, we collected ground-truth sidewalk widths from both sides of street segment midpoints across five highly walkable U.S. cities. We then aggregated these measurements and set the 95th percentile value as the maximum threshold. The figure below shows the resulting distribution of sidewalk widths across the five cities (N = 150,395 road segments with a sidewalk present).
         <br><br>
         <div class="sc-svg-wrap">
           <img src="assets/6_score_criteria/sidewalk.png"
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rule: `Wider buffer → higher score <span class="rule-note">(> 2.5 meters: 10.15 for each side)</span>`,
       fullMark: "20.3",
       popup: `
-        For each side of the street, we calculate a score based on street buffer width. The score increases as buffer get wider, up to a threshold of 2.5 meters (widths above 2.5 meters always receive the full marks). Scores from both sides are then summed.
+        For each side of the street, we calculate a score based on street buffer width. The score increases as buffers get wider, up to a threshold of 2.5 meters (widths above 2.5 meters always receive the full marks). Scores from both sides are then summed.
         <br>
         <ul>
           <li><span class="equation">Score per side = (width / 2.5 m) × 10.15</span>, capped at 10.15</li>
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     Bike Score®
                   </a>
                 </td>
-                <td>Weights are assigned based on the value of safety and comport each type of lane provides to bicycle users</td>
+                <td>Weights are assigned based on the value of safety and comfort each type of lane provides to bicycle users</td>
                 <td>x1</td>
                 <td>x2</td>
                 <td>x3</td>
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     FHWA (2023)
                   </a>
                 </td>
-                <td>Converting traditional bike lanes to separate bike lanes reduces crash risk to 44-64</td>
+                <td>Converting traditional bike lanes to separated bike lanes reduces crash risk to 44–64&#37;</td>
                 <td>–</td>
                 <td>100&#37;</td>
                 <td>44–64&#37;</td>
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <br><br>
         <div class="sc-svg-wrap">
           <img src="assets/6_score_criteria/road.png"
-              alt="POI accessibility distribution"
+              alt="Lane count distribution by road type"
               style="width:100%; max-width:800px; border-radius:8px;" />
         </div>
       `

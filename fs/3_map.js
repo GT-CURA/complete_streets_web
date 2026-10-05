@@ -119,7 +119,7 @@ const hoverPopup = new mapboxgl.Popup({ closeButton:false, closeOnClick:false })
 const HOVER_FIELD = {
   composite:   { label:'Composite score', prop:'composite_score', fmt:v => (+v).toFixed(1) },
   vehicle:     { label:'Number of lanes', prop:'VEHICULAR_attribute', fmt:v => String(v) },
-  bike:        { label:'Bike lane type', prop:'BIKE_attribute', fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'Not existed') },
+  bike:        { label:'Bike lane type', prop:'BIKE_attribute', fmt:v => (Number(v)===2?'Protected':Number(v)===1?'Designated':'None') },
   poi:         { label:'Amenity accessibility score', prop:'AMENITIES_attribute', fmt:v => (+v).toFixed(2) },
   parking:     { label:'Parking availability', prop:'STREET_PARKING_attribute', fmt: v => (v === 'yes' ? 'Yes' : v === 'no' ? 'No' : 'n/a')},
   median:     { label:'Median presence', prop:'MEDIAN_attribute', fmt: v => (v === 'yes' ? 'Yes' : v === 'no' ? 'No' : 'n/a')},
@@ -470,7 +470,7 @@ const LAYER_DEFS = [
     paint: { 'line-color': bikeColor, 'line-width': ['interpolate',['linear'],['zoom'],10,2,14,6], 'line-opacity': 0.95 },
     visibleByDefault: false,
     legend: { kind:'cats', title:'Lane type', width: 180, cats:[
-      {label:'Not existed', color:'#9e9e9e'},
+      {label:'None', color:'#9e9e9e'},
       {label:'Designated', color:'#90e0ef'},
       {label:'Protected',  color:'#0077b6'}
     ]}
